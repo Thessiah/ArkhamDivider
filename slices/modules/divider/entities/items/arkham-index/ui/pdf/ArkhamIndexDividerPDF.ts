@@ -27,6 +27,11 @@ import type {
 import { ArkhamIndexDividerLasercut } from "./ArkhamIndexDividerLasercut";
 
 const black = cmyk(0, 0, 0, 100);
+const sideBackgroundScale = 1.1;
+const sideTextOffset = {
+	x: 0,
+	y: 0,
+};
 
 export const ArkhamIndexDividerPDF: PDFDivider<
 	ArkhamIndexDividerParams
@@ -102,6 +107,8 @@ export const ArkhamIndexDividerPDF: PDFDivider<
 		width: wMm,
 		cornerRadius: O.cornerRadius,
 	});
+	const iconPosition =
+		tabSize !== "full" && tabLeft + tabWidth >= wMm - 0.01 ? "right" : "left";
 	const iconLeft = getArkhamIndexDividerIconLeft({
 		tabSize,
 		tabLeft,
@@ -109,6 +116,7 @@ export const ArkhamIndexDividerPDF: PDFDivider<
 		tabSideWidth: O.tab.sideWidth,
 		iconWidth: O.icon.width,
 		indentSize,
+		iconPosition,
 	});
 
 	const _fontFamily = getDefaultDividerFontFamily(language);
@@ -149,9 +157,18 @@ export const ArkhamIndexDividerPDF: PDFDivider<
 			objects: O,
 			divider: props,
 		});
+		const sideBackgroundGrowth =
+			O.sideBackground.width * (sideBackgroundScale - 1);
+		const sideBackgroundCenterOffset =
+			iconPosition === "right"
+				? -sideBackgroundGrowth / 2
+				: sideBackgroundGrowth / 2;
+		const sideTextLeft =
+			iconPosition === "right" ? O.icon.width - S.left - S.width : S.left;
 		const sideBox = bleed.box({
-			top: S.top,
-			left: iconLeft + S.left,
+			top: S.top - sideBackgroundGrowth / 2 + sideTextOffset.y,
+			left:
+				iconLeft + sideTextLeft + sideBackgroundCenterOffset + sideTextOffset.x,
 			width: S.width,
 			height: S.height,
 		});

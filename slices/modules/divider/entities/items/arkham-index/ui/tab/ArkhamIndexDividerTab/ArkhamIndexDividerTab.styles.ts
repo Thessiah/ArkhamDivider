@@ -8,12 +8,19 @@ import type {
 
 type Options = {
 	iconLeft: number;
+	iconPosition: "left" | "right";
 	showIcon: boolean;
 	tabWidth: number;
 	tabLeft: number;
 };
 
 type SxCallback<T = void> = ArkhamIndexDividerSxCallback<Options & T>;
+
+const sideBackgroundScale = 1.1;
+const sideTextOffset = {
+	x: -0.15,
+	y: -0.05,
+};
 
 export const getIconSx: SxCallback = ({ mm, objects: O, iconLeft: left }) => ({
 	position: "absolute",
@@ -59,11 +66,16 @@ export const getSideBackgroundSx: SxCallback = ({
 	mm,
 	iconLeft: left,
 	objects: O,
+	iconPosition,
 }) => {
-	const size = O.sideBackground.width;
+	const baseSize = O.sideBackground.width;
+	const size = baseSize * sideBackgroundScale;
 	const offset = {
-		x: O.sideBackground.left,
-		y: O.sideBackground.top,
+		x:
+			iconPosition === "right"
+				? O.icon.width - O.sideBackground.left - size
+				: O.sideBackground.left,
+		y: O.sideBackground.top + O.sideBackground.height - size,
 	};
 	return {
 		position: "absolute",
@@ -76,13 +88,23 @@ export const getSideBackgroundSx: SxCallback = ({
 
 export const getSideTextSx: SxCallback<
 	Options & { sideObject: ArkhamIndexDividerLayoutObjects["sideText"] }
-> = ({ mm, iconLeft: left, sideObject: S }) => {
+> = ({ mm, iconLeft: left, iconPosition, objects: O, sideObject: S }) => {
+	const sideBackgroundGrowth =
+		O.sideBackground.width * (sideBackgroundScale - 1);
+	const sideBackgroundCenterOffset =
+		iconPosition === "right"
+			? -sideBackgroundGrowth / 2
+			: sideBackgroundGrowth / 2;
+	const sideTextLeft =
+		iconPosition === "right" ? O.icon.width - S.left - S.width : S.left;
 	return {
 		position: "absolute",
 		fontFamily: "Arkhamic, Teutonic, serif",
 		fontSize: mm(S.fontSize),
-		top: mm(S.top),
-		left: mm(left + S.left),
+		top: mm(S.top - sideBackgroundGrowth / 2 + sideTextOffset.y),
+		left: mm(
+			left + sideTextLeft + sideBackgroundCenterOffset + sideTextOffset.x,
+		),
 		width: mm(S.width),
 		height: mm(S.height),
 		textAlign: "center",

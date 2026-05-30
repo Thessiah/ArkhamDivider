@@ -77,6 +77,8 @@ export function ArkhamIndexDividerTab() {
 		width,
 		cornerRadius,
 	});
+	const iconPosition: "left" | "right" =
+		tabSize !== "full" && tabLeft + tabWidth >= width - 0.01 ? "right" : "left";
 	const left = getArkhamIndexDividerIconLeft({
 		tabSize,
 		tabLeft,
@@ -84,6 +86,7 @@ export function ArkhamIndexDividerTab() {
 		tabSideWidth,
 		iconWidth,
 		indentSize: sxOptions.indentSize,
+		iconPosition,
 	});
 
 	const showGlyph = showArkhamIndexDividerTabIcon(divider);
@@ -93,11 +96,12 @@ export function ArkhamIndexDividerTab() {
 		() => ({
 			...sxOptions,
 			iconLeft: left,
+			iconPosition,
 			showIcon,
 			tabWidth,
 			tabLeft,
 		}),
-		[left, sxOptions, tabWidth, tabLeft, showIcon],
+		[left, sxOptions, iconPosition, tabWidth, tabLeft, showIcon],
 	);
 
 	const getPrintSx = usePrintSx(tabSxOptions);

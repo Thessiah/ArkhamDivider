@@ -7,6 +7,7 @@ type Options = {
 	tabSideWidth: number;
 	iconWidth: number;
 	indentSize: number;
+	iconPosition?: "left" | "right";
 };
 
 export const getArkhamIndexDividerIconLeft = ({
@@ -16,9 +17,13 @@ export const getArkhamIndexDividerIconLeft = ({
 	tabSideWidth,
 	iconWidth,
 	indentSize,
+	iconPosition = "left",
 }: Options) => {
 	if (tabSize === "full") {
 		return 0;
+	}
+	if (iconPosition === "right") {
+		return tabLeft + tabWidth - iconWidth - tabSideWidth * 0.7 - indentSize;
 	}
 	if (tabSize !== 1) {
 		return tabLeft + tabSideWidth * 0.7 + indentSize;

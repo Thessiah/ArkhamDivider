@@ -9,6 +9,7 @@ type Options = {
 	showSideText: boolean;
 	tabSize: ArkhamIndexDividerTabSize;
 	indentSize: number;
+	iconPosition?: "left" | "right";
 };
 
 export const getArkhamIndexDividerTabTitleObject = (options: Options) => {
@@ -17,7 +18,7 @@ export const getArkhamIndexDividerTabTitleObject = (options: Options) => {
 
 	const sideObject = {
 		...base,
-		...(showSideText ? O.tabTitle.withSideText : {}),
+		...(showSideText ? getSideTextObject(options) : {}),
 	};
 
 	const isFullSize = tabSize === "full";
@@ -41,8 +42,23 @@ export const getArkhamIndexDividerTabTitleObject = (options: Options) => {
 	};
 };
 
-const getBaseObject = ({ objects: O, showIcon }: Options) => {
+const getSideTextObject = ({ objects: O, iconPosition }: Options) => {
+	if (iconPosition === "right") {
+		return {
+			right: O.tabTitle.withSideText.right,
+		};
+	}
+	return O.tabTitle.withSideText;
+};
+
+const getBaseObject = ({ objects: O, showIcon, iconPosition }: Options) => {
 	if (showIcon) {
+		if (iconPosition === "right") {
+			return {
+				...O.tabTitle.default,
+				right: O.tabTitle.withIcon.right,
+			};
+		}
 		return {
 			...O.tabTitle.default,
 			...O.tabTitle.withIcon,
