@@ -8,12 +8,16 @@ export const arkhamIndexDividerBaseUrl =
 export const arkhamIndexDividerExternalUrl = import.meta.env
 	.VITE_ARKHAM_INDEX_URL;
 
-const tabSideWidth = 6.5;
-const sideOffsetWidth = tabSideWidth * 2;
+const originalTabSideWidth = 6.5;
+const tabSideWidth = 0;
+const sideOffsetWidth = originalTabSideWidth * 2;
+const tabSideWidthReduction = originalTabSideWidth - tabSideWidth;
+const tabTitleOffsetReduction = tabSideWidthReduction / 2;
+const tabTitleExtraRightReduction = tabTitleOffsetReduction / 2;
 
 const horizontalTabWidths: Record<number, number> = {
-	1: 25 + sideOffsetWidth,
-	2: 46 + sideOffsetWidth,
+	1: (25 + sideOffsetWidth) * 1.25,
+	2: (46 + sideOffsetWidth) * 1.25,
 	3: 68 + sideOffsetWidth,
 };
 
@@ -82,16 +86,16 @@ export const arkhamIndexDividerHorizontalObjects = {
 			fontSize: 6,
 			height: 6,
 			top: 2,
-			left: 6.5,
-			right: 11,
+			left: 6.5 - tabTitleOffsetReduction,
+			right: 11 - tabSideWidthReduction - tabTitleExtraRightReduction,
 		},
 		withIcon: {
-			left: 14.8,
-			right: 21,
+			left: 14.8 - tabTitleOffsetReduction,
+			right: 21 - tabSideWidthReduction - tabTitleExtraRightReduction,
 		},
 		withSideText: {
-			left: 19.5,
-			right: 27,
+			left: 19.5 - tabTitleOffsetReduction,
+			right: 27 - tabSideWidthReduction - tabTitleExtraRightReduction,
 		},
 		fullOffset: {
 			default: 7,
@@ -113,8 +117,8 @@ export const arkhamIndexDividerHorizontalSmallObjects = mergeDeepRight(
 );
 
 const verticalTabWidths: Record<number, number> = {
-	1: 15 + sideOffsetWidth,
-	2: 28 + sideOffsetWidth,
+	1: (15 + sideOffsetWidth) * 1.25,
+	2: (28 + sideOffsetWidth) * 1.25,
 	3: 46 + sideOffsetWidth,
 };
 
