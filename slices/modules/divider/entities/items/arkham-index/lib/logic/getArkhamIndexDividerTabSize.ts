@@ -3,6 +3,7 @@ import type {
 	ArkhamIndexDividerProps,
 	ArkhamIndexDividerTabSize,
 } from "../../model";
+import { getArkhamIndexDividerTabsCount } from "./getArkhamIndexDividerTabsCount";
 
 type Options = {
 	layout: ArkhamIndexDividerLayout;
@@ -16,11 +17,25 @@ export const getArkhamIndexDividerTabSize = ({
 	if (layout.params?.title === false) {
 		return "full";
 	}
-	return divider.params?.tabSize ?? getDefaultTabSize(divider);
+	const tabsCount = getArkhamIndexDividerTabsCount(layout);
+	const tabSize =
+		divider.params?.tabSize ?? getDefaultTabSize(divider, tabsCount);
+	return getTabSizeForTabsCount(tabSize, tabsCount);
+};
+
+const getTabSizeForTabsCount = (
+	tabSize: ArkhamIndexDividerTabSize,
+	tabsCount: number,
+) => {
+	if (tabsCount === 2 && tabSize === 1) {
+		return 2;
+	}
+	return tabSize;
 };
 
 const getDefaultTabSize = (
 	divider: ArkhamIndexDividerProps,
+	tabsCount: number,
 ): ArkhamIndexDividerTabSize => {
 	if (divider.type === "campaign") {
 		return 3;
@@ -31,6 +46,10 @@ const getDefaultTabSize = (
 		divider.subtype &&
 		["investigators", "faction"].includes(divider.subtype)
 	) {
+		return 2;
+	}
+
+	if (tabsCount === 2) {
 		return 2;
 	}
 

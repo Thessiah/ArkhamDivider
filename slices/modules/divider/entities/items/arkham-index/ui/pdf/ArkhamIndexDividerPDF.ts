@@ -14,6 +14,7 @@ import {
 	getArkhamIndexDividerTabIndentSize,
 	getArkhamIndexDividerTabLeft,
 	getArkhamIndexDividerTabSize,
+	getArkhamIndexDividerTabsCount,
 	getArkhamIndexDividerTabWidth,
 	getArkhamIndexSideText,
 	showArkhamIndexDividerTabIcon,
@@ -40,10 +41,12 @@ export const ArkhamIndexDividerPDF: PDFDivider<
 	const wMm = layout.size.width;
 	const hMm = layout.size.height;
 
+	const tabsCount = getArkhamIndexDividerTabsCount(layout);
+
 	const tabIndex = select(
 		selectDividerTabIndex({
 			id: props.id,
-			tabsCount: 3,
+			tabsCount,
 			side: props.side,
 		}),
 	);
@@ -71,6 +74,7 @@ export const ArkhamIndexDividerPDF: PDFDivider<
 		tabWidths: O.tab.width,
 		tabSize,
 		tabIndex,
+		tabsCount,
 		cornerRadiusEnabled,
 	};
 
@@ -93,6 +97,7 @@ export const ArkhamIndexDividerPDF: PDFDivider<
 	const tabLeft = getArkhamIndexDividerTabLeft({
 		tabSize,
 		tabIndex,
+		tabsCount,
 		tabWidths: O.tab.width,
 		width: wMm,
 		cornerRadius: O.cornerRadius,

@@ -32,6 +32,7 @@ export class ArkhamIndexDividerLasercut extends PDFLasercutService {
 			x: 0,
 			y: 0,
 			gap,
+			tabWidthOffset: 2 * gap,
 		});
 		const s = mm(1);
 		const doc = this.doc as PDFPathable;

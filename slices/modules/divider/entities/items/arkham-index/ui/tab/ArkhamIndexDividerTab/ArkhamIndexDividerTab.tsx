@@ -19,6 +19,7 @@ import {
 	getArkhamIndexDividerIconLeft,
 	getArkhamIndexDividerSideObject,
 	getArkhamIndexDividerTabLeft,
+	getArkhamIndexDividerTabsCount,
 	getArkhamIndexDividerTabWidth,
 	getArkhamIndexSideText,
 	showArkhamIndexDividerTabIcon,
@@ -52,6 +53,7 @@ export function ArkhamIndexDividerTab() {
 	const { cornerRadius } = sxOptions.objects;
 	const tabHeight = sxOptions.objects.tab.height;
 	const { width } = layout.size;
+	const tabsCount = getArkhamIndexDividerTabsCount(layout);
 	const tabWidth = getArkhamIndexDividerTabWidth({
 		tabWidths,
 		tabSize,
@@ -70,6 +72,7 @@ export function ArkhamIndexDividerTab() {
 	const tabLeft = getArkhamIndexDividerTabLeft({
 		tabSize,
 		tabIndex,
+		tabsCount,
 		tabWidths,
 		width,
 		cornerRadius,
@@ -143,7 +146,7 @@ export function ArkhamIndexDividerTab() {
 		{
 			dividerId: divider.id,
 			tabIndex,
-			tabsCount: 3,
+			tabsCount,
 		},
 	);
 

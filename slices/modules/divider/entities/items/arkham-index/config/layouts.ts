@@ -25,7 +25,7 @@ const horizontal: ArkhamIndexDividerLayout = {
 	mediaParams: ["customImage"],
 	tabs: {
 		type: "fixed",
-		value: 3,
+		value: 2,
 	},
 	scenarioParams: {
 		campaignIcon: true,

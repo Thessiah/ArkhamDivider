@@ -14,9 +14,11 @@ export type ArkhamIndexDividerBackgroundPathOptions = {
 	tabWidths: Record<number, number>;
 	tabSize: ArkhamIndexDividerTabSize;
 	tabIndex: number;
+	tabsCount: number;
 	x?: number;
 	y?: number;
 	gap?: number;
+	tabWidthOffset?: number;
 };
 
 type Options = ArkhamIndexDividerBackgroundPathOptions;
@@ -56,6 +58,7 @@ const getTabContentWidth = (options: {
 	tabSize: ArkhamIndexDividerTabSize;
 	tabSideWidth: number;
 	width: number;
+	tabWidthOffset?: number;
 }) => {
 	const { tabSideWidth } = options;
 	return getArkhamIndexDividerTabWidth(options) - 2 * tabSideWidth;
@@ -65,37 +68,48 @@ export const getArkhamIndexDividerTabWidth = ({
 	tabWidths,
 	tabSize,
 	width,
+	tabWidthOffset = 0,
 }: {
 	tabWidths: Record<number, number>;
 	tabSize: ArkhamIndexDividerTabSize;
 	width: number;
+	tabWidthOffset?: number;
 }) => {
 	if (tabSize === "full") {
 		return width;
 	}
-	return tabWidths[tabSize];
+	return tabWidths[tabSize] + tabWidthOffset;
 };
 
 export const getArkhamIndexDividerTabLeft = ({
 	tabSize,
 	tabIndex,
+	tabsCount,
 	width,
 	tabWidths,
 	cornerRadius,
+	tabWidthOffset,
 }: {
 	tabSize: ArkhamIndexDividerTabSize;
 	tabIndex: number;
+	tabsCount: number;
 	width: number;
 	tabWidths: Record<number, number>;
 	cornerRadius: number;
+	tabWidthOffset?: number;
 }) => {
 	if (tabIndex === 0 || tabSize === 3 || tabSize === "full") {
 		return cornerRadius;
 	}
 
-	const lastTabIndex = 3 - tabSize;
-	const isLastTab = tabIndex >= lastTabIndex;
-	const tabWidth = getArkhamIndexDividerTabWidth({ tabWidths, tabSize, width });
+	const physicalLastTabIndex = 3 - tabSize;
+	const isLastTab = tabIndex >= Math.min(tabsCount - 1, physicalLastTabIndex);
+	const tabWidth = getArkhamIndexDividerTabWidth({
+		tabWidths,
+		tabSize,
+		width,
+		tabWidthOffset,
+	});
 
 	if (tabSize === 2 || isLastTab) {
 		return width - tabWidth - cornerRadius;

@@ -26,6 +26,7 @@ import {
 	getArkhamIndexDividerDefaultColor,
 	getArkhamIndexDividerDefaultFilter,
 	getArkhamIndexDividerTabSize,
+	getArkhamIndexDividerTabsCount,
 	useArkhamIndexDividerSxOptions,
 } from "../../lib";
 import type {
@@ -48,8 +49,10 @@ export function ArkhamIndexDivider(props: ArkhamIndexDividerProps) {
 	const layout = useAppSelector(selectLayout) as ArkhamIndexDividerLayout;
 	const [showCardsInfo, setShowCardsInfo] = useBoolean(false);
 
+	const tabsCount = getArkhamIndexDividerTabsCount(layout);
+
 	const tabIndex = useAppSelector(
-		selectDividerTabIndex({ id: props.id, tabsCount: 3, side: props.side }),
+		selectDividerTabIndex({ id: props.id, tabsCount, side: props.side }),
 	);
 
 	const defaultColor = getArkhamIndexDividerDefaultColor(props);
