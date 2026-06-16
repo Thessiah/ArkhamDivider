@@ -82,7 +82,6 @@ function* pdfDownloadWorker({
 		cropmarksEnabled,
 		enablePageCounter,
 		cornerRadiusEnabled,
-		lasercutEnabled,
 		creaseEnabled,
 		pageMargin,
 	}: ReturnType<typeof selectPDFData> = yield select(selectPDFData);
@@ -94,11 +93,20 @@ function* pdfDownloadWorker({
 		return;
 	}
 
-	const { dpi = 300 } = payload;
+	const { dpi = 300, mode = "default" } = payload;
+	const cutPathOnly = mode === "cutPath";
+	const includeCutPath = mode === "cutPath" || mode === "pdfAndCut";
 
 	try {
 		try {
-			sink = yield call(createPdfDownloadSink);
+			sink = yield call(createPdfDownloadSink, {
+				suggestedName:
+					mode === "cutPath"
+						? "Arkham Divider Cut Path.pdf"
+						: mode === "pdfAndCut"
+							? "Arkham Divider PDF and Cut.pdf"
+							: "Arkham Divider.pdf",
+			});
 		} catch (e) {
 			if (e instanceof DOMException && e.name === "AbortError") {
 				return;
@@ -216,16 +224,29 @@ function* pdfDownloadWorker({
 		const lasercut = new PDFLasercutService(doc, {
 			cornerRadiusEnabled,
 			bleedEnabled,
-			enabled: lasercutEnabled,
+			enabled: includeCutPath,
 		});
 		const image = new PDFImageService(doc);
 		const counter = new PDFCounterService(text, pageSizePt);
-		const crease = new PDFCreaseService(doc, { enabled: creaseEnabled });
+		const crease = new PDFCreaseService(doc, {
+			enabled: !cutPathOnly && creaseEnabled,
+		});
+
+		if (cutPathOnly) {
+			text.draw = async () => {};
+			text.measureTextWidth = async () => 0;
+			icon.draw = async () => {};
+			image.drawImage = () => {};
+			image.drawSVG = async () => {};
+		}
 
 		const hideCounter =
-			(singleItemPerPage && !cropmarksEnabled) || !enablePageCounter;
+			cutPathOnly ||
+			(singleItemPerPage && !cropmarksEnabled) ||
+			!enablePageCounter;
 
 		const { background = true } = layout;
+		const shouldRenderBackground = background && !cutPathOnly;
 		const renderComponent: ReturnAwaited<typeof loadDividerPDFComponent> =
 			yield call(loadDividerPDFComponent, layout.categoryId);
 
@@ -265,7 +286,7 @@ function* pdfDownloadWorker({
 							y: px(item.position.y),
 						};
 
-						if (background) {
+						if (shouldRenderBackground) {
 							const { x, y } = position;
 							let contents: ReturnAwaited<typeof renderDivider> | null =
 								yield call(renderDivider, {
@@ -315,6 +336,7 @@ function* pdfDownloadWorker({
 							playerParams,
 							investigatorParams,
 							state,
+							cutPathOnly,
 						});
 
 						if (!hideCounter) {

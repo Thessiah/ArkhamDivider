@@ -135,7 +135,7 @@ export const ArkhamStarterDividerPDF: PDFDivider<
 	};
 
 	const storyTitleStrokeDraw = async (box: Box, coords: Rect) => {
-		if (!props.story) {
+		if (!props.story || ctx.cutPathOnly) {
 			return;
 		}
 		const storyScale = params?.customStoryTitleFontSizeScale ?? 100;

@@ -97,6 +97,7 @@ export const arkhamIndexDividerHorizontalObjects = {
 			left: 19.5 - tabTitleOffsetReduction,
 			right: 27 - tabSideWidthReduction - tabTitleExtraRightReduction,
 		},
+		withIconRight: undefined as { left: number } | undefined,
 		fullOffset: {
 			default: 7,
 			withSideText: 12,
@@ -122,6 +123,28 @@ const verticalTabWidths: Record<number, number> = {
 	3: 46 + sideOffsetWidth,
 };
 
+const verticalMediumDividerWidth = 65;
+const verticalMediumTabIconWidth = 10.1;
+const verticalMediumTabWidthInset = 0;
+const verticalMediumTabTitleInset = (6.5 - tabTitleOffsetReduction) / 2;
+const verticalMediumTabTitleTop =
+	arkhamIndexDividerHorizontalObjects.tabTitle.default.top - 2;
+
+const verticalMediumTabWidths: Record<number, number> = {
+	1:
+		verticalMediumDividerWidth -
+		verticalMediumTabIconWidth * 2 +
+		verticalMediumTabWidthInset * 2,
+	2:
+		verticalMediumDividerWidth -
+		verticalMediumTabIconWidth +
+		verticalMediumTabWidthInset,
+	3:
+		verticalMediumDividerWidth -
+		verticalMediumTabIconWidth +
+		verticalMediumTabWidthInset,
+};
+
 export const arkhamIndexDividerVerticalObjects = mergeDeepRight(
 	arkhamIndexDividerHorizontalObjects,
 	{
@@ -136,36 +159,14 @@ export const arkhamIndexDividerVerticalMediumObjects = mergeDeepRight(
 	arkhamIndexDividerVerticalObjects,
 	{
 		tab: {
-			height: 7.5,
-		},
-		icon: {
-			fontSize: 5.7,
-			width: 8,
-			height: 7,
-		},
-		iconBackground: {
-			width: 7.4,
-			height: 7.4,
-		},
-		sideBackground: {
-			top: 1.65,
-			left: 7.5,
-		},
-		sideText: {
-			top: 1.85,
-			left: 8,
+			width: verticalMediumTabWidths,
 		},
 		tabTitle: {
 			default: {
-				top: 0.75,
+				top: verticalMediumTabTitleTop,
 			},
-			withIcon: {
-				left: 12.7 - tabTitleOffsetReduction,
-				right: 18.9 - tabSideWidthReduction - tabTitleExtraRightReduction,
-			},
-			withSideText: {
-				left: 17.4 - tabTitleOffsetReduction,
-				right: 24.9 - tabSideWidthReduction - tabTitleExtraRightReduction,
+			withIconRight: {
+				left: verticalMediumTabTitleInset,
 			},
 		},
 	},

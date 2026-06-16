@@ -4,7 +4,7 @@ import { useDividerText } from "@/modules/divider/entities/lib";
 import { DividerText } from "@/modules/divider/entities/ui";
 import { usePrintSx } from "@/modules/print/shared/lib";
 import { useStoryTranslation } from "@/modules/story/shared/lib";
-import { getArkhamIndexSideText } from "../../../lib";
+import { getArkhamIndexPrefixedTabTitle } from "../../../lib";
 import { useArkhamIndexContext } from "../../ArkhamIndexContext";
 import * as S from "./ArkhamIndexDividerTabTitle.styles";
 
@@ -22,12 +22,8 @@ export function ArkhamIndexDividerTabTitle(
 	const titleOutlineSx = getPrintSx(S.getTitleOutlineSx);
 	const strokeSx = getPrintSx(S.getStrokeSx);
 	const textSx = getPrintSx(S.getTextSx);
-	const sideText = getArkhamIndexSideText(divider);
 	const defaultTitle = translateStory(divider.title);
-	const defaultTabTitle =
-		divider.type === "scenario" && sideText
-			? `${sideText}: ${defaultTitle}`
-			: defaultTitle;
+	const defaultTabTitle = getArkhamIndexPrefixedTabTitle(divider, defaultTitle);
 
 	const {
 		value: title,

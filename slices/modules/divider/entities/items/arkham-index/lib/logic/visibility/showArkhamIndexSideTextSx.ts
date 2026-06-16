@@ -1,10 +1,7 @@
 import type { ArkhamIndexDividerProps } from "../../../model";
 
 export const showArkhamIndexSideTextSx = (
-	divider: ArkhamIndexDividerProps,
+	_divider: ArkhamIndexDividerProps,
 ): boolean => {
-	if (divider.type === "player" && divider.xpCost) {
-		return true;
-	}
 	return false;
 };

@@ -5,9 +5,15 @@ import {
 
 export type PdfChunkSink = StreamingDownloadSink;
 
-export function createPdfDownloadSink(): Promise<PdfChunkSink> {
+type CreatePdfDownloadSinkOptions = {
+	suggestedName?: string;
+};
+
+export function createPdfDownloadSink(
+	options: CreatePdfDownloadSinkOptions = {},
+): Promise<PdfChunkSink> {
 	return createStreamingDownloadSink({
-		suggestedName: "Arkham Divider.pdf",
+		suggestedName: options.suggestedName ?? "Arkham Divider.pdf",
 		mimeType: "application/pdf",
 		types: [
 			{

@@ -36,6 +36,7 @@ export type PDFDividerContext = {
 	investigatorParams: Partial<InvestigatorDividerParams>;
 	params?: Record<string, unknown>;
 	state: RootState;
+	cutPathOnly?: boolean;
 };
 
 export type PDFDivider<T = void> = (

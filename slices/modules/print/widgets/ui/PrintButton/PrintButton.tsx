@@ -66,10 +66,14 @@ export function PrintButton(props: PrintButtonProps) {
 		ignore: anchorRef.current,
 	});
 
-	const download = useCallback(() => {
-		dispatch(downloadDividersAsPDF({ dpi }));
-		setOpen(false);
-	}, [dispatch, dpi]);
+	const download = useCallback(
+		(mode: "default" | "cutPath" | "pdfAndCut" = "default") =>
+			() => {
+				dispatch(downloadDividersAsPDF({ dpi, mode }));
+				setOpen(false);
+			},
+		[dispatch, dpi],
+	);
 
 	const downloadImages = (imageFormat: ImageFormat) => () => {
 		dispatch(downloadDividersAsImages({ imageFormat, dpi }));
@@ -138,9 +142,22 @@ export function PrintButton(props: PrintButtonProps) {
 												<Typography variant="body2">{dpi} DPI</Typography>
 											)}
 										</Box>,
-										<MenuItem key={`${dpi}-pdf`} onClick={download}>
+										<MenuItem key={`${dpi}-pdf`} onClick={download()}>
 											<Icon icon="file-pdf" /> &nbsp; PDF
 											<C.Badge>CMYK</C.Badge>
+										</MenuItem>,
+										<MenuItem
+											key={`${dpi}-pdf-cut`}
+											onClick={download("pdfAndCut")}
+										>
+											<Icon icon="file-pdf" /> &nbsp; PDF &amp; Cut
+											<C.Badge>CMYK</C.Badge>
+										</MenuItem>,
+										<MenuItem
+											key={`${dpi}-cut-path`}
+											onClick={download("cutPath")}
+										>
+											<Icon icon="file-pdf" /> &nbsp; Cut Path
 										</MenuItem>,
 										<MenuItem
 											key={`${dpi}-tiff`}

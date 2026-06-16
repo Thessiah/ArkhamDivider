@@ -56,6 +56,7 @@ const getBaseObject = ({ objects: O, showIcon, iconPosition }: Options) => {
 		if (iconPosition === "right") {
 			return {
 				...O.tabTitle.default,
+				left: O.tabTitle.withIconRight?.left ?? O.tabTitle.default.left,
 				right: O.tabTitle.withIcon.right,
 			};
 		}

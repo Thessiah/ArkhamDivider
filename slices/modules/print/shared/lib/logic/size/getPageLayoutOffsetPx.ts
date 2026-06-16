@@ -59,9 +59,8 @@ export const getPageLayoutOffsetPx = <T>(options: Options<T>) => {
 		isLast: pageLayout.isLast,
 	});
 
-	const topMargin = Math.max(minMarginTop, pageMargin.top);
-
-	const y = mm(topMargin);
+	const bottomMargin = Math.max(minMarginTop, pageMargin.top) * 2;
+	const y = pageSize.height - layoutSize.height - mm(bottomMargin);
 
 	return { x, y };
 };

@@ -4,6 +4,7 @@ export * from "./getArkhamIndexDividerBackgroundPath";
 export * from "./getArkhamIndexDividerTabIndentSize";
 export * from "./getArkhamIndexDividerTabSize";
 export * from "./getArkhamIndexDividerTabsCount";
+export * from "./getArkhamIndexPrefixedTabTitle";
 export * from "./getArkhamIndexSideText";
 export * from "./objects";
 export * from "./position";
