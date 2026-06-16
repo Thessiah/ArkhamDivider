@@ -183,7 +183,7 @@ export function ArkhamIndexDividerTab() {
 
 	return (
 		<>
-			<NotExportable visible={showIcon}>
+			<NotExportable visible={showIcon} hiddenOn={["pdf"]}>
 				<Image src={backgroundImage} sx={backgroundSx} onClick={selectIcon} />
 			</NotExportable>
 			{canChangeSize && (

@@ -132,6 +132,45 @@ export const arkhamIndexDividerVerticalObjects = mergeDeepRight(
 	},
 );
 
+export const arkhamIndexDividerVerticalMediumObjects = mergeDeepRight(
+	arkhamIndexDividerVerticalObjects,
+	{
+		tab: {
+			height: 7.5,
+		},
+		icon: {
+			fontSize: 5.7,
+			width: 8,
+			height: 7,
+		},
+		iconBackground: {
+			width: 7.4,
+			height: 7.4,
+		},
+		sideBackground: {
+			top: 1.65,
+			left: 7.5,
+		},
+		sideText: {
+			top: 1.85,
+			left: 8,
+		},
+		tabTitle: {
+			default: {
+				top: 0.75,
+			},
+			withIcon: {
+				left: 12.7 - tabTitleOffsetReduction,
+				right: 18.9 - tabSideWidthReduction - tabTitleExtraRightReduction,
+			},
+			withSideText: {
+				left: 17.4 - tabTitleOffsetReduction,
+				right: 24.9 - tabSideWidthReduction - tabTitleExtraRightReduction,
+			},
+		},
+	},
+);
+
 export const arkhamIndexDividerVerticalTrimObjects = mergeDeepRight(
 	arkhamIndexDividerVerticalObjects,
 	{

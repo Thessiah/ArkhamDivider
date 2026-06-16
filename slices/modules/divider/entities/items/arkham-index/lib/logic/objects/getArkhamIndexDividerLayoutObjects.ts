@@ -1,6 +1,7 @@
 import {
 	arkhamIndexDividerHorizontalObjects,
 	arkhamIndexDividerHorizontalSmallObjects,
+	arkhamIndexDividerVerticalMediumObjects,
 	arkhamIndexDividerVerticalObjects,
 	arkhamIndexDividerVerticalTrimObjects,
 } from "../../../config";
@@ -11,6 +12,9 @@ export const getArkhamIndexDividerLayoutObjects = (
 ) => {
 	if (layout.id === "arkham-index-vertical-trim") {
 		return arkhamIndexDividerVerticalTrimObjects;
+	}
+	if (layout.id === "arkham-index-vertical-medium") {
+		return arkhamIndexDividerVerticalMediumObjects;
 	}
 	if (layout.id.includes("trim")) {
 		return arkhamIndexDividerHorizontalSmallObjects;

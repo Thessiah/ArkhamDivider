@@ -44,9 +44,9 @@ function* worker({ payload }: ReturnType<typeof generateScenarioDividers>) {
 			: [];
 
 	const dividers = [
-		...campaignDividers,
-		...encounterSetDividers,
 		...scenarioDividers,
+		...encounterSetDividers,
+		...campaignDividers,
 	];
 
 	const actionCreator = payload.mode === "add" ? addManyDividers : setDividers;

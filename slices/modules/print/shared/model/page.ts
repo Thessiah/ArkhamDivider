@@ -8,7 +8,8 @@ export type PageFormatType =
 	| `${CommonFormat}${CommonSize}`
 	| "Letter"
 	| "Legal"
-	| "Tabloid";
+	| "Tabloid"
+	| "18x12";
 
 export type PageFormat = {
 	type: PageFormatType;

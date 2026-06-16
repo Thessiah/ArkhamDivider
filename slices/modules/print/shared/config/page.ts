@@ -56,6 +56,12 @@ export const PageSize: Record<PageFormatType, PrintSize> = {
 		600: size(6600, 10200),
 		1200: size(13200, 20400),
 	},
+	"18x12": {
+		mm: size(457.2, 304.8),
+		300: size(5400, 3600),
+		600: size(10800, 7200),
+		1200: size(21600, 14400),
+	},
 };
 
 const createFormat = (type: PageFormatType, name: string = type) => ({
@@ -74,4 +80,5 @@ export const pageSizeFormats: PageFormat[] = [
 	createFormat("Letter", "US Letter"),
 	createFormat("Legal", "US Legal"),
 	createFormat("Tabloid", "US Tabloid"),
+	createFormat("18x12", '18" x 12"'),
 ];

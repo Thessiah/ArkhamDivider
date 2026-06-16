@@ -3,6 +3,8 @@ import { useLocaleSx } from "@/modules/core/i18n/entities/lib";
 import { useDividerText } from "@/modules/divider/entities/lib";
 import { DividerText } from "@/modules/divider/entities/ui";
 import { usePrintSx } from "@/modules/print/shared/lib";
+import { useStoryTranslation } from "@/modules/story/shared/lib";
+import { getArkhamIndexSideText } from "../../../lib";
 import { useArkhamIndexContext } from "../../ArkhamIndexContext";
 import * as S from "./ArkhamIndexDividerTabTitle.styles";
 
@@ -12,6 +14,7 @@ export function ArkhamIndexDividerTabTitle(
 	props: ArkhamIndexDividerTabTitleProps,
 ) {
 	const { divider, sxOptions } = useArkhamIndexContext();
+	const { translateStory } = useStoryTranslation(divider.story);
 	const getPrintSx = usePrintSx(sxOptions);
 	const getLocaleSx = useLocaleSx(sxOptions);
 	const titleSx = getLocaleSx(S.getTitleSx);
@@ -19,6 +22,12 @@ export function ArkhamIndexDividerTabTitle(
 	const titleOutlineSx = getPrintSx(S.getTitleOutlineSx);
 	const strokeSx = getPrintSx(S.getStrokeSx);
 	const textSx = getPrintSx(S.getTextSx);
+	const sideText = getArkhamIndexSideText(divider);
+	const defaultTitle = translateStory(divider.title);
+	const defaultTabTitle =
+		divider.type === "scenario" && sideText
+			? `${sideText}: ${defaultTitle}`
+			: defaultTitle;
 
 	const {
 		value: title,
@@ -30,6 +39,7 @@ export function ArkhamIndexDividerTabTitle(
 		divider,
 		param: "tabTitle",
 		fontSizeScaleParam: "tabTitleFontSizeScale",
+		defaultValue: defaultTabTitle,
 	});
 
 	const sx = {

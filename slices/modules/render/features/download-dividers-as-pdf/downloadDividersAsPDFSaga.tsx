@@ -21,8 +21,6 @@ import {
 	getPDFPageLayouts,
 	PDFCounterService,
 	PDFCreaseService,
-	PDFCreditsService,
-	PDFCropmarkService,
 	PDFFontService,
 	PDFIconService,
 	PDFImageService,
@@ -220,10 +218,8 @@ function* pdfDownloadWorker({
 			bleedEnabled,
 			enabled: lasercutEnabled,
 		});
-		const cropmarks = new PDFCropmarkService(doc);
 		const image = new PDFImageService(doc);
 		const counter = new PDFCounterService(text, pageSizePt);
-		const credits = new PDFCreditsService(doc, text, image);
 		const crease = new PDFCreaseService(doc, { enabled: creaseEnabled });
 
 		const hideCounter =
@@ -247,20 +243,8 @@ function* pdfDownloadWorker({
 				}
 				doc.addPage();
 
-				if (layout) {
-					yield call([credits, credits.draw], {
-						pageSize: pageSizePt,
-						pageFormat,
-						layoutGrid,
-						singleItemPerPage,
-						cropmarksEnabled,
-						pdfLayout,
-						layout,
-						language,
-					});
-				}
-				for (const [rowIndex, row] of pdfLayout.items.entries()) {
-					for (const [colIndex, item] of row.items.entries()) {
+				for (const row of pdfLayout.items) {
+					for (const item of row.items) {
 						if (writeFailed) {
 							break renderLoop;
 						}
@@ -339,17 +323,6 @@ function* pdfDownloadWorker({
 								total: pdfLayout.total,
 								showSide: doubleSided,
 								side: pdfLayout.side,
-							});
-						}
-
-						if (cropmarksEnabled) {
-							cropmarks.draw({
-								grid: pdfLayout.grid,
-								rowIndex,
-								colIndex,
-								bleedEnabled,
-								bleed: layout.bleed,
-								position,
 							});
 						}
 

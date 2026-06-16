@@ -7,7 +7,9 @@ import {
 import type { PDFDivider } from "@/modules/pdf/shared/model";
 import { selectShowCornerRadius } from "@/modules/print/shared/lib";
 import type { RootState } from "@/shared/store";
+import { loadArkhamIndexIconBackgroundImage } from "../../api/loadArkhamIndexIconBackgroundImage";
 import {
+	getArkhamIndexDividerIconBackgroundLeft,
 	getArkhamIndexDividerIconLeft,
 	getArkhamIndexDividerLayoutObjects,
 	getArkhamIndexDividerSideObject,
@@ -130,6 +132,25 @@ export const ArkhamIndexDividerPDF: PDFDivider<
 		if (!icon) {
 			return;
 		}
+
+		const iconBackgroundLeft = getArkhamIndexDividerIconBackgroundLeft({
+			objects: O,
+			iconPosition,
+		});
+		const iconBackgroundBox = bleed.box({
+			top: O.iconBackground.top,
+			left: iconLeft + iconBackgroundLeft,
+			width: O.iconBackground.width,
+			height: O.iconBackground.height,
+		});
+		const iconBackgroundImage = await loadArkhamIndexIconBackgroundImage();
+		ctx.image.drawImage(iconBackgroundImage, {
+			x: iconBackgroundBox.x(),
+			y: iconBackgroundBox.y(),
+			width: iconBackgroundBox.width(),
+			height: iconBackgroundBox.height(),
+		});
+
 		const iconBox = bleed.box({
 			top: O.icon.top,
 			left: iconLeft,

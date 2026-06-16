@@ -21,6 +21,18 @@ export type GetEncounterSetDividersOptions = {
 
 const uniqSets = (sets: EncounterSet[]) => uniqBy(prop("code"), compact(sets));
 
+const getFirstEncounterCardNumber = (encounterSet: EncounterSet) => {
+	const cards = encounterSet.types?.[0]?.cards;
+
+	if (!cards) {
+		return Infinity;
+	}
+
+	const cardNumbers = Object.keys(cards).map(Number).filter(Number.isFinite);
+
+	return Math.min(...cardNumbers);
+};
+
 export const getEncounterSetDividers = (
 	options: GetEncounterSetDividersOptions,
 ) => {
@@ -67,15 +79,20 @@ export const getEncounterSetDividers = (
 		...(includeExtraEncounterSets ? extraEncounters : []),
 	]);
 
-	const encounters = uniqEncounters.filter((encounter) => {
-		const isScenario = scenarioEncounterCodes.includes(encounter.code);
+	const encounters = uniqEncounters
+		.filter((encounter) => {
+			const isScenario = scenarioEncounterCodes.includes(encounter.code);
 
-		if (!includeScenarioEncounterSets && isScenario) {
-			return false;
-		}
+			if (!includeScenarioEncounterSets && isScenario) {
+				return false;
+			}
 
-		return true;
-	});
+			return true;
+		})
+		.toSorted(
+			(left, right) =>
+				getFirstEncounterCardNumber(left) - getFirstEncounterCardNumber(right),
+		);
 
 	const returnEncounterSets = returnStory?.encounterSets ?? [];
 

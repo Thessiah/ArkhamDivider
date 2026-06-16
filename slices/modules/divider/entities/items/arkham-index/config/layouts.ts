@@ -16,11 +16,11 @@ const horizontal: ArkhamIndexDividerLayout = {
 	printSize: {
 		300: {
 			size: createSize(1028, 980),
-			bleedSize: createSize(1098, 1051),
+			bleedSize: createSize(1075, 1027),
 		},
 	},
 	creasingTop: 9.5,
-	bleed: 3,
+	bleed: 2,
 	iconParams: ["icon", "campaignIcon"],
 	mediaParams: ["customImage"],
 	tabs: {
@@ -45,7 +45,7 @@ const medium: ArkhamIndexDividerLayout = {
 	printSize: {
 		300: {
 			size: createSize(1028, 892),
-			bleedSize: createSize(1098, 963),
+			bleedSize: createSize(1075, 939),
 		},
 	},
 	params: {
@@ -63,7 +63,7 @@ const trim: ArkhamIndexDividerLayout = {
 	printSize: {
 		300: {
 			size: createSize(1028, 892),
-			bleedSize: createSize(1098, 963),
+			bleedSize: createSize(1075, 939),
 		},
 	},
 	params: {
@@ -81,7 +81,7 @@ const vertical: ArkhamIndexDividerLayout = {
 	printSize: {
 		300: {
 			size: createSize(768, 1276),
-			bleedSize: createSize(839, 1347),
+			bleedSize: createSize(815, 1323),
 		},
 	},
 	params: {
@@ -93,14 +93,15 @@ const verticalMedium: ArkhamIndexDividerLayout = {
 	...vertical,
 	id: "arkham-index-vertical-medium",
 	groupId: "vertical-medium",
-	size: createSize(65, 98),
+	size: createSize(65, 96),
 	name: "Medium",
 	printSize: {
 		300: {
-			size: createSize(768, 1157),
-			bleedSize: createSize(839, 1228),
+			size: createSize(768, 1134),
+			bleedSize: createSize(815, 1181),
 		},
 	},
+	creasingTop: 7.5,
 	params: {
 		title: true,
 	},
@@ -116,7 +117,7 @@ const verticalTrim: ArkhamIndexDividerLayout = {
 	printSize: {
 		300: {
 			size: createSize(768, 1157),
-			bleedSize: createSize(839, 1228),
+			bleedSize: createSize(815, 1204),
 		},
 	},
 	sleeves: [
@@ -142,7 +143,7 @@ const verticalTrim100: ArkhamIndexDividerLayout = {
 	printSize: {
 		300: {
 			size: createSize(768, 1181),
-			bleedSize: createSize(839, 1252),
+			bleedSize: createSize(815, 1228),
 		},
 	},
 	sleeves: [

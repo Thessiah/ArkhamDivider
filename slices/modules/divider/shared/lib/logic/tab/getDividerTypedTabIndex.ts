@@ -1,4 +1,3 @@
-import { propEq } from "ramda";
 import type { Side } from "@/shared/model";
 import { whereId } from "@/shared/util";
 import type { Divider } from "../../../model";
@@ -21,9 +20,8 @@ export const getDividerTypedTabIndex = <T extends Divider<unknown>>(
 		return defaultTabIndex ?? 0;
 	}
 
-	const typedDividers = dividers.filter(propEq(divider.type, "type"));
-	const dividerTypeIndex = typedDividers.indexOf(divider) % tabsCount;
-	const defaultIndex = defaultTabIndex ?? dividerTypeIndex;
+	const dividerIndex = dividers.indexOf(divider) % tabsCount;
+	const defaultIndex = defaultTabIndex ?? dividerIndex;
 
 	return getDividerTabIndex({
 		divider,

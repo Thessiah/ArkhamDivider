@@ -1,6 +1,7 @@
 import type { Faction } from "@/modules/faction/shared/model";
 import { percent } from "@/shared/util";
 import { getArkhamIndexDividerTabTitleObject as getTitleObject } from "../../../lib/logic/objects/getArkhamIndexDividerTabTitleObject";
+import { getArkhamIndexDividerIconBackgroundLeft } from "../../../lib/logic/position/getArkhamIndexDividerIconBackgroundLeft";
 import type {
 	ArkhamIndexDividerLayoutObjects,
 	ArkhamIndexDividerSxCallback,
@@ -41,17 +42,22 @@ export const getIconSx: SxCallback = ({ mm, objects: O, iconLeft: left }) => ({
 export const getBackgroundSx: SxCallback = ({
 	mm,
 	iconLeft: left,
+	iconPosition,
 	objects: O,
 	showIcon,
 }) => {
 	const size = O.iconBackground.width;
+	const iconBackgroundLeft = getArkhamIndexDividerIconBackgroundLeft({
+		objects: O,
+		iconPosition,
+	});
 	return {
 		position: "absolute",
 		zIndex: 4,
 		width: mm(size),
 		height: mm(size),
 		top: mm(O.iconBackground.top),
-		left: mm(left + O.iconBackground.left),
+		left: mm(left + iconBackgroundLeft),
 		cursor: "pointer",
 		opacity: showIcon ? 1 : 0.3,
 		"@media screen": {
@@ -215,12 +221,20 @@ const factionPosition: Record<
 	multiclass: { top: 1.1, left: 1.3, width: 7.5, height: 7.5 },
 };
 
-export const getFactionImageSx: SxCallback = ({ mm, iconLeft, faction }) => {
+export const getFactionImageSx: SxCallback = ({
+	mm,
+	iconLeft,
+	iconPosition,
+	faction,
+	objects: O,
+}) => {
 	const F = factionPosition[faction];
+	const factionLeft =
+		iconPosition === "right" ? O.icon.width - F.left - F.width : F.left;
 	return {
 		position: "absolute",
 		top: mm(F.top),
-		left: mm(iconLeft + F.left),
+		left: mm(iconLeft + factionLeft),
 		height: mm(F.height),
 		width: mm(F.width),
 		zIndex: 4,
