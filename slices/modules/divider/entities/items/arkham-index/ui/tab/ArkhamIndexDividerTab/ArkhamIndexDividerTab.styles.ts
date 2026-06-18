@@ -1,7 +1,6 @@
 import type { Faction } from "@/modules/faction/shared/model";
 import { percent } from "@/shared/util";
 import { getArkhamIndexDividerTabTitleObject as getTitleObject } from "../../../lib/logic/objects/getArkhamIndexDividerTabTitleObject";
-import { getArkhamIndexDividerIconBackgroundLeft } from "../../../lib/logic/position/getArkhamIndexDividerIconBackgroundLeft";
 import type {
 	ArkhamIndexDividerLayoutObjects,
 	ArkhamIndexDividerSxCallback,
@@ -23,48 +22,83 @@ const sideTextOffset = {
 	y: -0.05,
 };
 
-export const getIconSx: SxCallback = ({ mm, objects: O, iconLeft: left }) => ({
-	position: "absolute",
-	zIndex: 5,
-	fontSize: mm(O.icon.fontSize),
-	left: mm(left),
-	top: mm(O.icon.top),
-	width: mm(O.icon.width),
-	height: mm(O.icon.height),
-	cursor: "pointer",
-	"@media screen": {
-		":hover": {
-			opacity: percent(70),
-		},
-	},
+export const getTabGlyphStrokeSx: ArkhamIndexDividerSxCallback = ({ mm }) => ({
+	textShadow: `0 0 ${mm(1)} black`,
+	WebkitTextStroke: `${mm(0.3)} rgba(0, 0, 0, 0.5)`,
 });
 
-export const getBackgroundSx: SxCallback = ({
-	mm,
-	iconLeft: left,
-	iconPosition,
-	objects: O,
-	showIcon,
-}) => {
-	const size = O.iconBackground.width;
-	const iconBackgroundLeft = getArkhamIndexDividerIconBackgroundLeft({
-		objects: O,
-		iconPosition,
-	});
+export const getTabImageStrokeSx: ArkhamIndexDividerSxCallback = ({ mm }) => ({
+	filter: `drop-shadow(0 0 ${mm(1)} black)`,
+});
+
+export const getIconWrapperSx: SxCallback = (options) => {
+	const glowInset = options.objects.icon.glowInset ?? 0;
+	const isRight = options.iconPosition === "right";
+
 	return {
 		position: "absolute",
-		zIndex: 4,
-		width: mm(size),
-		height: mm(size),
-		top: mm(O.iconBackground.top),
-		left: mm(left + iconBackgroundLeft),
+		zIndex: 5,
+		left: options.mm(options.iconLeft),
+		top: options.mm(options.objects.icon.top),
+		width: options.mm(options.objects.icon.width),
+		height: options.mm(options.objects.icon.height),
+		paddingTop: options.mm(0),
+		paddingBottom: options.mm(glowInset),
+		paddingLeft: options.mm(isRight ? glowInset : 0),
+		paddingRight: options.mm(isRight ? 0 : glowInset),
+		boxSizing: "border-box",
 		cursor: "pointer",
-		opacity: showIcon ? 1 : 0.3,
 		"@media screen": {
 			":hover": {
 				opacity: percent(70),
 			},
 		},
+	};
+};
+
+export const getIconGlyphSx: SxCallback = (options) => {
+	const centerOffset = options.objects.icon.height / 2;
+	const isRight = options.iconPosition === "right";
+
+	return {
+		position: "absolute",
+		top: 0,
+		bottom: 0,
+		left: isRight ? undefined : options.mm(centerOffset),
+		right: isRight ? options.mm(centerOffset) : undefined,
+		transform: isRight ? "translateX(50%)" : "translateX(-50%)",
+		fontSize: options.mm(options.objects.icon.fontSize),
+		color: "white",
+		zIndex: 1,
+		display: "flex",
+		alignItems: "center",
+		justifyContent: "center",
+		width: "max-content",
+		lineHeight: 1,
+	};
+};
+
+export const getIconGlyphStrokeSx: SxCallback = (options) => {
+	const centerOffset = options.objects.icon.height / 2;
+	const isRight = options.iconPosition === "right";
+
+	return {
+		position: "absolute",
+		top: 0,
+		bottom: 0,
+		left: isRight ? undefined : options.mm(centerOffset),
+		right: isRight ? options.mm(centerOffset) : undefined,
+		transform: isRight ? "translateX(50%)" : "translateX(-50%)",
+		fontSize: options.mm(options.objects.icon.fontSize),
+		color: "white",
+		zIndex: 0,
+		pointerEvents: "none",
+		display: "flex",
+		alignItems: "center",
+		justifyContent: "center",
+		width: "max-content",
+		lineHeight: 1,
+		...getTabGlyphStrokeSx(options),
 	};
 };
 
@@ -221,13 +255,8 @@ const factionPosition: Record<
 	multiclass: { top: 1.1, left: 1.3, width: 7.5, height: 7.5 },
 };
 
-export const getFactionImageSx: SxCallback = ({
-	mm,
-	iconLeft,
-	iconPosition,
-	faction,
-	objects: O,
-}) => {
+export const getFactionImageSx: SxCallback = (options) => {
+	const { mm, iconLeft, iconPosition, faction, objects: O } = options;
 	const F = factionPosition[faction];
 	const factionLeft =
 		iconPosition === "right" ? O.icon.width - F.left - F.width : F.left;
@@ -240,6 +269,7 @@ export const getFactionImageSx: SxCallback = ({
 		zIndex: 4,
 		cursor: "pointer",
 		objectFit: "contain",
+		...getTabImageStrokeSx(options),
 		"@media screen": {
 			":hover": {
 				opacity: percent(30),

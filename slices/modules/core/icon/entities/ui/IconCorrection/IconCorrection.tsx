@@ -29,7 +29,7 @@ export function IconCorrection(props: IconCorrectionProps) {
 	const { fontSize, left, right, top, bottom } = position;
 
 	const correction =
-		fontSize && isString(icon)
+		!disableCorrection && fontSize && isString(icon)
 			? getIconCorrection({
 					icon,
 					manifest,

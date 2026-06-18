@@ -101,7 +101,7 @@ const verticalMedium: ArkhamIndexDividerLayout = {
 			bleedSize: createSize(815, 1181),
 		},
 	},
-	creasingTop: 9.5,
+	creasingTop: 6.5,
 	params: {
 		title: true,
 	},

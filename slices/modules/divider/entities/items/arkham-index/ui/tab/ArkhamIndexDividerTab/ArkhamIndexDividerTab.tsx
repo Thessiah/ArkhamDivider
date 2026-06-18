@@ -85,7 +85,7 @@ export function ArkhamIndexDividerTab() {
 		tabWidth,
 		tabSideWidth,
 		iconWidth,
-		indentSize: sxOptions.indentSize,
+		edgeMargin: sxOptions.objects.icon.edgeMargin,
 		iconPosition,
 	});
 
@@ -118,8 +118,9 @@ export function ArkhamIndexDividerTab() {
 
 	const showSideText = showArkhamIndexSideTextSx(divider);
 
-	const iconSx = getPrintSx(S.getIconSx);
-	const backgroundSx = getPrintSx(S.getBackgroundSx);
+	const iconWrapperSx = getPrintSx(S.getIconWrapperSx);
+	const iconGlyphSx = getPrintSx(S.getIconGlyphSx);
+	const iconGlyphStrokeSx = getPrintSx(S.getIconGlyphStrokeSx);
 	const sideBackgroundSx = getPrintSx(S.getSideBackgroundSx);
 	const sideTextSx = getPrintSx(S.getSideTextSx, sideOptions);
 	const titleSx = getPrintSx(S.getTitleSx, { showSideText });
@@ -183,9 +184,6 @@ export function ArkhamIndexDividerTab() {
 
 	return (
 		<>
-			<NotExportable visible={showIcon} hiddenOn={["pdf"]}>
-				<Image src={backgroundImage} sx={backgroundSx} onClick={selectIcon} />
-			</NotExportable>
 			{canChangeSize && (
 				<NotExportable>
 					<Box
@@ -240,13 +238,24 @@ export function ArkhamIndexDividerTab() {
 				</NotExportable>
 			)}
 			{showGlyph && (
-				<Icon
-					dividerId={divider.id}
-					icon={icon}
-					sx={iconSx}
-					scaleType="circle"
-					onClick={selectIcon}
-				/>
+				<Box sx={iconWrapperSx} onClick={selectIcon}>
+					<Icon
+						dividerId={divider.id}
+						icon={icon}
+						sx={iconGlyphStrokeSx}
+						scaleType={false}
+						resizeDisabled
+						disableCorrection
+					/>
+					<Icon
+						dividerId={divider.id}
+						icon={icon}
+						sx={iconGlyphSx}
+						scaleType={false}
+						resizeDisabled
+						disableCorrection
+					/>
+				</Box>
 			)}
 			{showIcon && !showGlyph && divider.layoutType !== "scenario" && (
 				<Image

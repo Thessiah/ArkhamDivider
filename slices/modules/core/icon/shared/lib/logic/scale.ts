@@ -18,6 +18,9 @@ export const getIconScale = ({
 	if (!ratio) {
 		return 100;
 	}
+	if (scaleType === false) {
+		return 100;
+	}
 	if (scaleType === "circle") {
 		return getCircleScale({
 			ratio,

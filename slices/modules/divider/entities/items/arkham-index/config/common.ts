@@ -15,6 +15,21 @@ const tabSideWidthReduction = originalTabSideWidth - tabSideWidth;
 const tabTitleOffsetReduction = tabSideWidthReduction / 2;
 const tabTitleExtraRightReduction = tabTitleOffsetReduction / 2;
 
+const tabTitleFontSize = 6;
+const tabTitleHeight = 6;
+const tabTitleTop = 2;
+/** Tab glyph render size relative to tab title text (one quarter smaller). */
+const tabIconSizeScale = 3 / 4;
+const tabIconFontSize = tabTitleFontSize * tabIconSizeScale;
+/** Layout slot for the tab icon (title positioning and tab widths). */
+const tabIconSlotWidth = tabTitleHeight * (10.1 / 9);
+const tabIconSlotHeight = tabTitleHeight;
+const tabIconToTitleGap = 1;
+/** Inner padding so stroke/glow stays inside the icon slot. */
+const tabIconGlowInset = 1.5;
+const horizontalTabIconSlotWidth = 10.1;
+const horizontalTabIconToTitleGap = 4.7;
+
 const horizontalTabWidths: Record<number, number> = {
 	1: (25 + sideOffsetWidth) * 1.25,
 	2: (46 + sideOffsetWidth) * 1.25,
@@ -30,10 +45,12 @@ export const arkhamIndexDividerHorizontalObjects = {
 	},
 	cornerRadius: 3,
 	icon: {
-		fontSize: 7.3,
-		top: 0.25,
-		width: 10.1,
-		height: 9,
+		fontSize: tabIconFontSize,
+		top: tabTitleTop,
+		width: horizontalTabIconSlotWidth,
+		height: tabIconSlotHeight,
+		glowInset: 0,
+		edgeMargin: 0,
 	},
 	title: {
 		fontSize: 3.7,
@@ -83,14 +100,17 @@ export const arkhamIndexDividerHorizontalObjects = {
 	},
 	tabTitle: {
 		default: {
-			fontSize: 6,
-			height: 6,
-			top: 2,
+			fontSize: tabTitleFontSize,
+			height: tabTitleHeight,
+			top: tabTitleTop,
 			left: 6.5 - tabTitleOffsetReduction,
 			right: 11 - tabSideWidthReduction - tabTitleExtraRightReduction,
 		},
 		withIcon: {
-			left: 14.8 - tabTitleOffsetReduction,
+			left:
+				horizontalTabIconSlotWidth +
+				horizontalTabIconToTitleGap -
+				tabTitleOffsetReduction,
 			right: 21 - tabSideWidthReduction - tabTitleExtraRightReduction,
 		},
 		withSideText: {
@@ -123,25 +143,40 @@ const verticalTabWidths: Record<number, number> = {
 	3: 46 + sideOffsetWidth,
 };
 
+const verticalTabIndentSize = 2;
+
 const verticalMediumDividerWidth = 65;
-const verticalMediumTabIconWidth = 10.1;
-const verticalMediumTabWidthInset = 0;
+const verticalMediumTabHeight = 6.5;
+/** Vertical space above/below glyph in icon slot; also used as card-edge margin. */
+const verticalMediumTabIconContentInset =
+	(tabIconSlotHeight - tabIconFontSize) / 2;
+const verticalMediumTabIconEdgeMargin = verticalMediumTabIconContentInset;
+/** Offset icon–text gap by the same amount the side margin was reduced (4.5mm → content inset). */
+const verticalMediumTabIconPreviousEdgeMargin = 4.5;
+const verticalMediumTabIconToTitleGap =
+	tabIconToTitleGap +
+	1.75 +
+	(verticalMediumTabIconPreviousEdgeMargin - verticalMediumTabIconContentInset);
+const verticalMediumTabWidthInset = -0.5;
+const verticalMediumTabIconSlotWidth = tabIconSlotWidth;
+const verticalMediumTabReservedEdge =
+	verticalMediumTabIconSlotWidth + verticalMediumTabIconEdgeMargin;
 const verticalMediumTabTitleInset = (6.5 - tabTitleOffsetReduction) / 2;
-const verticalMediumTabTitleTop =
-	arkhamIndexDividerHorizontalObjects.tabTitle.default.top - 2;
+const verticalMediumTabTitleTop = tabTitleTop - 2;
+const verticalMediumTabIconTop = verticalMediumTabTitleTop;
 
 const verticalMediumTabWidths: Record<number, number> = {
 	1:
 		verticalMediumDividerWidth -
-		verticalMediumTabIconWidth * 2 +
+		verticalMediumTabReservedEdge * 2 +
 		verticalMediumTabWidthInset * 2,
 	2:
 		verticalMediumDividerWidth -
-		verticalMediumTabIconWidth +
+		verticalMediumTabReservedEdge +
 		verticalMediumTabWidthInset,
 	3:
 		verticalMediumDividerWidth -
-		verticalMediumTabIconWidth +
+		verticalMediumTabReservedEdge +
 		verticalMediumTabWidthInset,
 };
 
@@ -150,7 +185,7 @@ export const arkhamIndexDividerVerticalObjects = mergeDeepRight(
 	{
 		tab: {
 			width: verticalTabWidths,
-			indentSize: 2,
+			indentSize: verticalTabIndentSize,
 		},
 	},
 );
@@ -159,14 +194,31 @@ export const arkhamIndexDividerVerticalMediumObjects = mergeDeepRight(
 	arkhamIndexDividerVerticalObjects,
 	{
 		tab: {
+			height: verticalMediumTabHeight,
+			indentSize: verticalTabIndentSize,
 			width: verticalMediumTabWidths,
+		},
+		icon: {
+			height: tabIconSlotHeight,
+			width: verticalMediumTabIconSlotWidth,
+			fontSize: tabIconFontSize,
+			top: verticalMediumTabIconTop,
+			glowInset: tabIconGlowInset,
+			edgeMargin: verticalMediumTabIconEdgeMargin,
 		},
 		tabTitle: {
 			default: {
 				top: verticalMediumTabTitleTop,
 			},
+			withIcon: {
+				left:
+					verticalMediumTabIconEdgeMargin +
+					verticalMediumTabIconSlotWidth +
+					verticalMediumTabIconToTitleGap -
+					tabTitleOffsetReduction,
+			},
 			withIconRight: {
-				left: verticalMediumTabTitleInset,
+				left: verticalMediumTabTitleInset + 1,
 			},
 		},
 	},

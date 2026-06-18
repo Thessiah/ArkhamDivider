@@ -7,13 +7,10 @@ import {
 import type { PDFDivider } from "@/modules/pdf/shared/model";
 import { selectShowCornerRadius } from "@/modules/print/shared/lib";
 import type { RootState } from "@/shared/store";
-import { loadArkhamIndexIconBackgroundImage } from "../../api/loadArkhamIndexIconBackgroundImage";
 import {
-	getArkhamIndexDividerIconBackgroundLeft,
 	getArkhamIndexDividerIconLeft,
 	getArkhamIndexDividerLayoutObjects,
 	getArkhamIndexDividerSideObject,
-	getArkhamIndexDividerTabIndentSize,
 	getArkhamIndexDividerTabLeft,
 	getArkhamIndexDividerTabSize,
 	getArkhamIndexDividerTabsCount,
@@ -29,10 +26,102 @@ import type {
 import { ArkhamIndexDividerLasercut } from "./ArkhamIndexDividerLasercut";
 
 const black = cmyk(0, 0, 0, 100);
+const white = cmyk(0, 0, 0, 0);
+const tabIconStrokeWidthMm = 0.3;
+
 const sideBackgroundScale = 1.1;
 const sideTextOffset = {
 	x: 0,
 	y: 0,
+};
+
+const drawTabIconGlyph = async ({
+	content,
+	ctx,
+	fontSize,
+	x,
+	y,
+	color,
+	overprint = true,
+}: {
+	content: string;
+	ctx: Parameters<PDFDivider<ArkhamIndexDividerParams>>[1];
+	fontSize: number;
+	x: number;
+	y: number;
+	color: ReturnType<typeof cmyk>;
+	overprint?: boolean;
+}) => {
+	await ctx.text.draw(content, {
+		x,
+		y,
+		fontSize,
+		baseline: "top",
+		fontFamily: "ArkhamIcons",
+		color,
+		overprint,
+		lineBreak: false,
+	});
+};
+
+const drawTabIconStroke = async ({
+	content,
+	ctx,
+	fontSize,
+	mm,
+	x,
+	y,
+}: {
+	content: string;
+	ctx: Parameters<PDFDivider<ArkhamIndexDividerParams>>[1];
+	fontSize: number;
+	mm: (value: number) => number;
+	x: number;
+	y: number;
+}) => {
+	await ctx.text.measureTextWidth({
+		text: content,
+		fontFamily: "ArkhamIcons",
+		fontSize,
+	});
+	const { doc } = ctx.text;
+	doc.save();
+	doc.fontSize(fontSize);
+	doc.strokeColor(black);
+	doc.opacity(1);
+	doc.lineWidth(mm(tabIconStrokeWidthMm));
+	doc.text(content, x, y, {
+		stroke: true,
+		fill: false,
+		lineBreak: false,
+		baseline: "top",
+	});
+	doc.restore();
+};
+
+const getTabIconGlyphX = ({
+	iconBox,
+	slotWidthPt,
+	glyphWidthPt,
+	iconHeightPt,
+	iconPosition,
+}: {
+	iconBox: ReturnType<
+		ReturnType<
+			Parameters<PDFDivider<ArkhamIndexDividerParams>>[1]["unit"]["fromBleed"]
+		>["box"]
+	>;
+	slotWidthPt: number;
+	glyphWidthPt: number;
+	iconHeightPt: number;
+	iconPosition: "left" | "right";
+}) => {
+	const slotX = iconBox.x();
+	const centerX =
+		iconPosition === "right"
+			? slotX + slotWidthPt - iconHeightPt / 2
+			: slotX + iconHeightPt / 2;
+	return centerX - glyphWidthPt / 2;
 };
 
 export const ArkhamIndexDividerPDF: PDFDivider<
@@ -65,13 +154,6 @@ export const ArkhamIndexDividerPDF: PDFDivider<
 		layout,
 	});
 
-	const indentSize = getArkhamIndexDividerTabIndentSize({
-		divider: props,
-		tabIndex,
-		tabSize,
-		tabIndentSize: O.tab.indentSize,
-	});
-
 	const pathOptions = {
 		width: wMm,
 		height: hMm,
@@ -96,6 +178,10 @@ export const ArkhamIndexDividerPDF: PDFDivider<
 		});
 	}
 
+	if (ctx.cutPathOnly) {
+		return;
+	}
+
 	const tabWidth = getArkhamIndexDividerTabWidth({
 		tabWidths: O.tab.width,
 		tabSize,
@@ -117,7 +203,7 @@ export const ArkhamIndexDividerPDF: PDFDivider<
 		tabWidth,
 		tabSideWidth: O.tab.sideWidth,
 		iconWidth: O.icon.width,
-		indentSize,
+		edgeMargin: O.icon.edgeMargin,
 		iconPosition,
 	});
 
@@ -129,44 +215,51 @@ export const ArkhamIndexDividerPDF: PDFDivider<
 			param: "icon",
 			defaultIcon: props.icon,
 		});
-		if (!icon) {
-			return;
+		if (icon && typeof icon === "string") {
+			const iconDef = ctx.icon.icons[icon];
+			if (iconDef) {
+				const fontSizePt = mm(O.icon.fontSize);
+				const glyphWidthPt = (iconDef.ratio ?? 1) * fontSizePt;
+
+				const iconBox = bleed.box({
+					top: O.icon.top,
+					left: iconLeft,
+					width: O.icon.width,
+					height: O.icon.height,
+				});
+
+				const slotWidthPt = iconBox.options.size.width;
+				const iconHeightPt = mm(O.icon.height);
+				const xPt = getTabIconGlyphX({
+					iconBox,
+					slotWidthPt,
+					glyphWidthPt,
+					iconHeightPt,
+					iconPosition,
+				});
+				const yPt = iconBox.y() + (mm(O.icon.height) - fontSizePt) / 2;
+
+				const content = String.fromCodePoint(iconDef.code);
+
+				await drawTabIconStroke({
+					content,
+					ctx,
+					fontSize: fontSizePt,
+					mm,
+					x: xPt,
+					y: yPt,
+				});
+				await drawTabIconGlyph({
+					content,
+					ctx,
+					fontSize: fontSizePt,
+					x: xPt,
+					y: yPt,
+					color: white,
+					overprint: true,
+				});
+			}
 		}
-
-		const iconBackgroundLeft = getArkhamIndexDividerIconBackgroundLeft({
-			objects: O,
-			iconPosition,
-		});
-		const iconBackgroundBox = bleed.box({
-			top: O.iconBackground.top,
-			left: iconLeft + iconBackgroundLeft,
-			width: O.iconBackground.width,
-			height: O.iconBackground.height,
-		});
-		const iconBackgroundImage = await loadArkhamIndexIconBackgroundImage();
-		ctx.image.drawImage(iconBackgroundImage, {
-			x: iconBackgroundBox.x(),
-			y: iconBackgroundBox.y(),
-			width: iconBackgroundBox.width(),
-			height: iconBackgroundBox.height(),
-		});
-
-		const iconBox = bleed.box({
-			top: O.icon.top,
-			left: iconLeft,
-			width: O.icon.width,
-			height: O.icon.height,
-		});
-		await ctx.icon.draw(icon, {
-			x: iconBox.x(),
-			y: iconBox.y(),
-			width: iconBox.width(),
-			height: iconBox.height(),
-			fontSize: mm(O.icon.fontSize),
-			color: black,
-			overprint: true,
-			iconOptions: { scaleType: "circle" },
-		});
 	}
 
 	if (showArkhamIndexSideTextSx(props)) {
