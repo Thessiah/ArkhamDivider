@@ -25,6 +25,11 @@ export type ArkhamIndexDividerParams = {
 	indent?: boolean;
 
 	color?: string;
+
+	// Marks a content-less divider that only occupies a tab slot (used to keep
+	// the tab pattern continuous across appended sets). Its background is hidden
+	// to avoid wasting ink.
+	spacer?: boolean;
 };
 
 export type ArkhamIndexDividerProps =

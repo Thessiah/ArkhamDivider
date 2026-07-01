@@ -105,20 +105,23 @@ export function ArkhamIndexDivider(props: ArkhamIndexDividerProps) {
 	const { side } = props;
 
 	const showMediaContent = props.layoutType !== "player";
+	const isSpacer = props.params?.spacer === true;
 	return (
 		<ArkhamIndexContext.Provider
 			value={{ layout, divider: props, tabSize, tabIndex, sxOptions }}
 		>
 			<Container>
 				<BleedView>
-					<Image
-						src={`${arkhamIndexDividerBaseUrl}/background.avif`}
-						sx={{
-							...backgroundSx,
-							filter: backgroundFilter,
-							zIndex: 1,
-						}}
-					/>
+					{!isSpacer && (
+						<Image
+							src={`${arkhamIndexDividerBaseUrl}/background.avif`}
+							sx={{
+								...backgroundSx,
+								filter: backgroundFilter,
+								zIndex: 1,
+							}}
+						/>
+					)}
 					{showBackgroundIcon && (
 						<C.Layer side={props.side}>
 							<DividerIcon
