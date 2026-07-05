@@ -1,4 +1,5 @@
-import { put, select, takeEvery } from "redux-saga/effects";
+import { REHYDRATE } from "redux-persist";
+import { put, select, takeEvery, takeLatest } from "redux-saga/effects";
 import {
 	getDividerLayoutGrid,
 	selectLayout,
@@ -52,6 +53,7 @@ function* worker() {
 }
 
 export function* setLayoutGridOnLayoutChangeSaga() {
+	yield takeLatest(REHYDRATE, worker);
 	yield takeEvery(setLayoutId.match, worker);
 	yield takeEvery(setPageSize.match, worker);
 	yield takeEvery(setBleedEnabled.match, worker);

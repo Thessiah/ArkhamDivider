@@ -196,7 +196,7 @@ export const ArkhamIndexDividerPDF: PDFDivider<
 		cornerRadius: O.cornerRadius,
 	});
 	const iconPosition =
-		tabSize !== "full" && tabLeft + tabWidth >= wMm - 0.01 ? "right" : "left";
+		tabSize === "full" || tabLeft + tabWidth >= wMm - 0.01 ? "left" : "right";
 	const iconLeft = getArkhamIndexDividerIconLeft({
 		tabSize,
 		tabLeft,

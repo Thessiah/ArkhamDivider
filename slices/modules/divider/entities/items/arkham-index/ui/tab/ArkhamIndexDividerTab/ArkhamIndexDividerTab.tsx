@@ -78,7 +78,7 @@ export function ArkhamIndexDividerTab() {
 		cornerRadius,
 	});
 	const iconPosition: "left" | "right" =
-		tabSize !== "full" && tabLeft + tabWidth >= width - 0.01 ? "right" : "left";
+		tabSize === "full" || tabLeft + tabWidth >= width - 0.01 ? "left" : "right";
 	const left = getArkhamIndexDividerIconLeft({
 		tabSize,
 		tabLeft,

@@ -29,10 +29,21 @@ const tabIconToTitleGap = 1;
 const tabIconGlowInset = 1.5;
 const horizontalTabIconSlotWidth = 10.1;
 const horizontalTabIconToTitleGap = 4.7;
+const horizontalIconEdgeMargin = 5 - tabTitleOffsetReduction;
+const horizontalTabTextSideMargin =
+	(6.5 -
+		tabTitleOffsetReduction +
+		(21 -
+			tabSideWidthReduction -
+			tabTitleExtraRightReduction -
+			horizontalTabIconSlotWidth -
+			horizontalTabIconToTitleGap +
+			tabTitleOffsetReduction)) /
+	2;
 
 const horizontalTabWidths: Record<number, number> = {
 	1: (25 + sideOffsetWidth) * 1.25,
-	2: (46 + sideOffsetWidth) * 1.25,
+	2: 46,
 	3: 68 + sideOffsetWidth,
 };
 
@@ -50,7 +61,7 @@ export const arkhamIndexDividerHorizontalObjects = {
 		width: horizontalTabIconSlotWidth,
 		height: tabIconSlotHeight,
 		glowInset: 0,
-		edgeMargin: 0,
+		edgeMargin: horizontalIconEdgeMargin,
 	},
 	title: {
 		fontSize: 3.7,
@@ -103,19 +114,29 @@ export const arkhamIndexDividerHorizontalObjects = {
 			fontSize: tabTitleFontSize,
 			height: tabTitleHeight,
 			top: tabTitleTop,
-			left: 6.5 - tabTitleOffsetReduction,
+			left: horizontalTabTextSideMargin,
 			right: 11 - tabSideWidthReduction - tabTitleExtraRightReduction,
 		},
 		withIcon: {
 			left:
+				horizontalIconEdgeMargin +
 				horizontalTabIconSlotWidth +
 				horizontalTabIconToTitleGap -
 				tabTitleOffsetReduction,
-			right: 21 - tabSideWidthReduction - tabTitleExtraRightReduction,
+			right:
+				horizontalIconEdgeMargin +
+				horizontalTabIconSlotWidth +
+				horizontalTabIconToTitleGap -
+				tabTitleOffsetReduction +
+				horizontalTabTextSideMargin,
 		},
 		withSideText: {
-			left: 19.5 - tabTitleOffsetReduction,
-			right: 27 - tabSideWidthReduction - tabTitleExtraRightReduction,
+			left: 19.5 + horizontalIconEdgeMargin - tabTitleOffsetReduction,
+			right:
+				27 +
+				horizontalIconEdgeMargin -
+				tabSideWidthReduction -
+				tabTitleExtraRightReduction,
 		},
 		withIconRight: undefined as { left: number } | undefined,
 		fullOffset: {
