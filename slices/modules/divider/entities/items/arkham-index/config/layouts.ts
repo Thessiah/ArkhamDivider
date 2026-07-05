@@ -12,14 +12,14 @@ const horizontal: ArkhamIndexDividerLayout = {
 	name: "Large",
 	orientation: "horizontal",
 	color: true,
-	size: createSize(92, 76.5),
+	size: createSize(92, 76),
 	printSize: {
 		300: {
-			size: createSize(1087, 904),
-			bleedSize: createSize(1134, 951),
+			size: createSize(1087, 898),
+			bleedSize: createSize(1134, 945),
 		},
 	},
-	creasingTop: 9.5,
+	creasingTop: 8,
 	bleed: 2,
 	iconParams: ["icon", "campaignIcon"],
 	mediaParams: ["customImage"],

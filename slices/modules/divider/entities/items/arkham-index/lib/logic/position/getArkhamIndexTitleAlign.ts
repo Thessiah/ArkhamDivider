@@ -7,6 +7,16 @@ type Options = {
 	tabSize: ArkhamIndexDividerTabSize;
 	tabIndex: number;
 };
-export const getArkhamIndexTitleAlign = ({ showIcon }: Options): Align => {
-	return showIcon ? "left" : "center";
+export const getArkhamIndexTitleAlign = ({
+	showIcon,
+	tabIndex,
+	tabSize,
+}: Options): Align => {
+	if (!showIcon) {
+		return "center";
+	}
+	if (tabSize === "full") {
+		return "left";
+	}
+	return tabIndex === 0 ? "right" : "left";
 };

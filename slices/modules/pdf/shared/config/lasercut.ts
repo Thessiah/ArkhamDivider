@@ -4,7 +4,7 @@ import { rgb } from "@/modules/core/color/shared/lib";
  * The gap is the amount of space that is left on the edge of the divider
  * after the lasercut.
  */
-export const LASERCUT_GAP = 0.5;
+export const LASERCUT_GAP = 0;
 
 /** High contrast border color for lasercut area */
 export const LASERCUT_COLOR = rgb(255, 0, 0);
