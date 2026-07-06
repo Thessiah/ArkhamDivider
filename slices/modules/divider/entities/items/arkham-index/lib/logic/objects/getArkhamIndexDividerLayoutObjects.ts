@@ -1,4 +1,5 @@
 import {
+	arkhamIndexDividerHorizontalLowerBodyObjects,
 	arkhamIndexDividerHorizontalObjects,
 	arkhamIndexDividerHorizontalSmallObjects,
 	arkhamIndexDividerVerticalMediumObjects,
@@ -18,6 +19,9 @@ export const getArkhamIndexDividerLayoutObjects = (
 	}
 	if (layout.id.includes("trim")) {
 		return arkhamIndexDividerHorizontalSmallObjects;
+	}
+	if (layout.id === "arkham-index-lower-body") {
+		return arkhamIndexDividerHorizontalLowerBodyObjects;
 	}
 	if (layout.orientation === "horizontal") {
 		return arkhamIndexDividerHorizontalObjects;

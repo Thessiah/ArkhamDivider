@@ -36,6 +36,15 @@ const horizontal: ArkhamIndexDividerLayout = {
 	},
 };
 
+const horizontalLowerBody: ArkhamIndexDividerLayout = {
+	...horizontal,
+	id: "arkham-index-lower-body",
+	groupId: "lower-body",
+	name: "Lower Body",
+	creasingTop: 38,
+	maxItemsPerPage: 14,
+};
+
 const medium: ArkhamIndexDividerLayout = {
 	...horizontal,
 	id: "arkham-index-medium",
@@ -160,6 +169,7 @@ const verticalTrim100: ArkhamIndexDividerLayout = {
 
 export const arkhamIndexLayouts: DividerLayout[] = [
 	horizontal,
+	horizontalLowerBody,
 	medium,
 	trim,
 	vertical,

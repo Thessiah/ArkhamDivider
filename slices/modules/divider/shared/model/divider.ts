@@ -114,6 +114,8 @@ export type BaseDividerData<Params = void> = {
 	customTitle?: string;
 	icon?: Icon | null;
 	params?: Params;
+	/** Blank spacer inserted to align campaign tab positions; never rendered. */
+	phantom?: boolean;
 };
 
 export type Divider<Params = void> = BaseDividerData<Params> &

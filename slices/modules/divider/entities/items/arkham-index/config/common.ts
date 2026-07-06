@@ -28,18 +28,8 @@ const tabIconToTitleGap = 1;
 /** Inner padding so stroke/glow stays inside the icon slot. */
 const tabIconGlowInset = 1.5;
 const horizontalTabIconSlotWidth = 10.1;
-const horizontalTabIconToTitleGap = 4.7;
-const horizontalIconEdgeMargin = 5 - tabTitleOffsetReduction;
-const horizontalTabTextSideMargin =
-	(6.5 -
-		tabTitleOffsetReduction +
-		(21 -
-			tabSideWidthReduction -
-			tabTitleExtraRightReduction -
-			horizontalTabIconSlotWidth -
-			horizontalTabIconToTitleGap +
-			tabTitleOffsetReduction)) /
-	2;
+const horizontalIconEdgeMargin = 4.5 - tabTitleOffsetReduction;
+const horizontalTabTextSideMargin = 2;
 const horizontalTabTitleTop = tabTitleTop - 0.75;
 
 const horizontalTabWidths: Record<number, number> = {
@@ -154,6 +144,15 @@ export const arkhamIndexDividerHorizontalSmallObjects = mergeDeepRight(
 	{
 		topLine: {
 			top: 0.5,
+		},
+	},
+);
+
+export const arkhamIndexDividerHorizontalLowerBodyObjects = mergeDeepRight(
+	arkhamIndexDividerHorizontalObjects,
+	{
+		tab: {
+			height: 38,
 		},
 	},
 );

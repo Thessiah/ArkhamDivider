@@ -1,9 +1,13 @@
 import { put, select, takeEvery } from "redux-saga/effects";
 import {
 	addManyDividers,
+	createPhantomDividers,
+	getTabResetPadding,
+	selectDividersTotal,
 	setDividers,
-} from "@/modules/divider/shared/lib/store/dividers";
+} from "@/modules/divider/shared/lib";
 import { selectStoryCode } from "@/modules/story/shared/lib";
+import { selectLayout } from "../../selectors";
 import { generatePlayerDividers } from "./generatePlayerDividers";
 import { getPlayerDividers } from "./lib";
 
@@ -11,15 +15,21 @@ function* worker({ payload }: ReturnType<typeof generatePlayerDividers>) {
 	const storyCode: ReturnType<typeof selectStoryCode> =
 		yield select(selectStoryCode);
 	const { mode } = payload;
-	const dividers = getPlayerDividers({
+	const newDividers = getPlayerDividers({
 		...payload,
 		storyCode,
 	});
 
 	if (mode === "create") {
-		yield put(setDividers(dividers));
+		yield put(setDividers(newDividers));
 	} else if (mode === "add") {
-		yield put(addManyDividers(dividers));
+		const layout: ReturnType<typeof selectLayout> = yield select(selectLayout);
+		const existingCount: ReturnType<typeof selectDividersTotal> =
+			yield select(selectDividersTotal);
+		const tabsCount = layout?.tabs?.type === "fixed" ? layout.tabs.value : 2;
+		const phantomCount = getTabResetPadding(existingCount, tabsCount);
+		const phantoms = createPhantomDividers(phantomCount);
+		yield put(addManyDividers([...phantoms, ...newDividers]));
 	}
 }
 

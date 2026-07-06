@@ -2,10 +2,11 @@ import { v4 } from "uuid";
 import type { PageLayout, PageLayoutGrid, PageLayoutRow } from "../../model";
 
 type Options<T> = {
-	data: T[];
+	data: (T | undefined)[];
 	layoutGrid: PageLayoutGrid;
 	doubleSided?: boolean;
 	singleItemPerPage?: boolean;
+	maxItemsPerPage?: number;
 };
 
 export const getPageLayouts = <T>(options: Options<T>) => {
@@ -49,6 +50,7 @@ const getFrontLayouts = <T>({
 	data,
 	layoutGrid,
 	singleItemPerPage,
+	maxItemsPerPage,
 }: Options<T>) => {
 	const { rows, unitSize } = layoutGrid;
 	const pageLayouts: PageLayout<T>[] = [];
@@ -57,7 +59,9 @@ const getFrontLayouts = <T>({
 	const gridUnits = rows * layoutGrid.cols;
 	const mustFallbackToSingle = !Number.isFinite(gridUnits) || gridUnits <= 0;
 	const itemsPerPage =
-		singleItemPerPage || mustFallbackToSingle ? 1 : gridUnits;
+		singleItemPerPage || mustFallbackToSingle
+			? 1
+			: Math.min(maxItemsPerPage ?? gridUnits, gridUnits);
 	const totalPages = Math.ceil(data.length / itemsPerPage);
 
 	const grid =

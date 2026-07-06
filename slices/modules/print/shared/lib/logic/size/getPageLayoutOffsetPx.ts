@@ -44,7 +44,9 @@ export const getPageLayoutOffsetPx = <T>(options: Options<T>) => {
 
 	const layoutSize = getLayoutSizePx({ pageLayout, dpi });
 
-	const x = pageMargin.left + (pageSize.width - layoutSize.width) / 2;
+	const freeX = pageSize.width - layoutSize.width;
+	const isLandscape = pageFormat.size.mm.width > pageFormat.size.mm.height;
+	const x = pageMargin.left + freeX * (isLandscape ? 1 / 3 : 1 / 2);
 
 	if (!pageLayout.isLast) {
 		const y = pageMargin.top + (pageSize.height - layoutSize.height) / 2;

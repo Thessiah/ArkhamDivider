@@ -46,6 +46,9 @@ export function PrintablePage<T extends WithId>({
 	const aspectRatio = grid.size.width / grid.size.height;
 	const pageOptions = pick(["side", "number", "total"], pageLayout);
 
+	const isLandscape = pageSize.width > pageSize.height;
+	const leftOffsetMm = isLandscape ? (pageSize.width - grid.size.width) / 3 : 0;
+
 	const contentSx = {
 		aspectRatio,
 		width: `${containerSize.width}%`,
@@ -70,8 +73,9 @@ export function PrintablePage<T extends WithId>({
 			justifyContent={justifyContent}
 			paddingTop={mm(pageMargin.top)}
 			paddingBottom={mm(pageMargin.bottom)}
-			paddingLeft={mm(pageMargin.left)}
+			paddingLeft={mm(pageMargin.left + leftOffsetMm)}
 			paddingRight={mm(pageMargin.right)}
+			alignItems={isLandscape ? "flex-start" : "center"}
 		>
 			<Stack sx={contentSx}>
 				{rows.map((rowIndex) => (

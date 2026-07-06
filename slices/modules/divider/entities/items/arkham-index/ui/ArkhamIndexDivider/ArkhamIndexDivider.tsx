@@ -101,6 +101,10 @@ export function ArkhamIndexDivider(props: ArkhamIndexDividerProps) {
 	const menuSx = getPrintSx(S.getMenuSx);
 	const infoSx = getPrintSx(S.getInfoSx);
 	const dividerCardsSx = getPrintSx(S.getDividerCardsSx);
+	const bleedClipSx = getPrintSx(S.getBleedViewClipSx, { layout });
+
+	const isLowerBodyClipActive =
+		layout.id === "arkham-index-lower-body" && tabSize !== "full";
 
 	const { side } = props;
 
@@ -109,8 +113,10 @@ export function ArkhamIndexDivider(props: ArkhamIndexDividerProps) {
 		<ArkhamIndexContext.Provider
 			value={{ layout, divider: props, tabSize, tabIndex, sxOptions }}
 		>
-			<Container>
-				<BleedView>
+			<Container
+				sx={isLowerBodyClipActive ? { backgroundColor: "white" } : undefined}
+			>
+				<BleedView sx={bleedClipSx}>
 					<Image
 						src={`${arkhamIndexDividerBaseUrl}/background.avif`}
 						sx={{

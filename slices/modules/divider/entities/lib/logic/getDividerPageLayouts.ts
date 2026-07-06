@@ -7,18 +7,22 @@ type Options<T extends DividerWithRelations> = {
 	layoutGrid: PageLayoutGrid;
 	doubleSided?: boolean;
 	singleItemPerPage?: boolean;
+	maxItemsPerPage?: number;
 };
 export const getDividerPageLayouts = <T extends DividerWithRelations>({
 	dividers,
 	doubleSided,
 	singleItemPerPage,
 	layoutGrid,
+	maxItemsPerPage,
 }: Options<T>) => {
+	const data = dividers.map((d): T | undefined => (d.phantom ? undefined : d));
 	const pageLayouts = getPageLayouts({
-		data: dividers,
+		data,
 		layoutGrid,
 		singleItemPerPage,
 		doubleSided,
+		maxItemsPerPage,
 	});
 
 	return pageLayouts;

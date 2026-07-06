@@ -19,7 +19,6 @@ import { loadDividerPDFComponent } from "@/modules/divider/entities/lib/runtime"
 import {
 	destroyPDFDocument,
 	getPDFPageLayouts,
-	PDFCounterService,
 	PDFCreaseService,
 	PDFFontService,
 	PDFIconService,
@@ -80,7 +79,6 @@ function* pdfDownloadWorker({
 		playerParams,
 		investigatorParams,
 		cropmarksEnabled,
-		enablePageCounter,
 		cornerRadiusEnabled,
 		creaseEnabled,
 		pageMargin,
@@ -206,6 +204,7 @@ function* pdfDownloadWorker({
 				layoutGrid,
 				doubleSided,
 				singleItemPerPage,
+				maxItemsPerPage: layout?.maxItemsPerPage,
 			},
 		);
 
@@ -227,7 +226,6 @@ function* pdfDownloadWorker({
 			enabled: includeCutPath,
 		});
 		const image = new PDFImageService(doc);
-		const counter = new PDFCounterService(text, pageSizePt);
 		const crease = new PDFCreaseService(doc, {
 			enabled: !cutPathOnly && creaseEnabled,
 		});
@@ -239,11 +237,6 @@ function* pdfDownloadWorker({
 			image.drawImage = () => {};
 			image.drawSVG = async () => {};
 		}
-
-		const hideCounter =
-			cutPathOnly ||
-			(singleItemPerPage && !cropmarksEnabled) ||
-			!enablePageCounter;
 
 		const { background = true } = layout;
 		const shouldRenderBackground = background && !cutPathOnly;
@@ -338,15 +331,6 @@ function* pdfDownloadWorker({
 							state,
 							cutPathOnly,
 						});
-
-						if (!hideCounter) {
-							yield call(counter.draw, {
-								number: pdfLayout.number,
-								total: pdfLayout.total,
-								showSide: doubleSided,
-								side: pdfLayout.side,
-							});
-						}
 
 						progress++;
 						yield put(setRenderProgress(progress));

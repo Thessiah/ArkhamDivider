@@ -49,6 +49,8 @@ export type DividerLayout<Params = Record<string, unknown>> = {
 	mediaParams?: string[];
 	/** The top creasing in mm */
 	creasingTop?: number;
+	/** Maximum number of real items per page; remaining slots render as blank */
+	maxItemsPerPage?: number;
 	scenarioParams?: {
 		campaignIcon?: boolean;
 		cardsCount?: boolean;

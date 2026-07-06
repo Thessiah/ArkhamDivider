@@ -18,7 +18,7 @@ export class PDFCounterService {
 		this.draw = this.draw.bind(this);
 	}
 
-	draw(options: DrawCounterOptions): Promise<void> {
+	async draw(options: DrawCounterOptions): Promise<void> {
 		const { pageSize } = this;
 		const label = getPageCounterText(options);
 
@@ -28,7 +28,7 @@ export class PDFCounterService {
 		const y = mm(1.5);
 		const width = pageSize.width - 2 * x;
 
-		return this.text.draw(label, {
+		await this.text.draw(label, {
 			fontFamily: "AlegreyaRegular",
 			y,
 			x,

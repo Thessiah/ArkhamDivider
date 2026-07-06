@@ -6,6 +6,7 @@ import {
 	selectSingleItemPerPage,
 } from "@/modules/print/shared/lib";
 import { getDividerPageLayouts } from "../../logic";
+import { selectLayout } from "./selectLayout";
 
 export const selectDividerPageLayouts = createSelector(
 	[
@@ -13,8 +14,9 @@ export const selectDividerPageLayouts = createSelector(
 		selectDoubleSidePrintEnabled,
 		selectSingleItemPerPage,
 		selectPageLayoutGrid,
+		selectLayout,
 	],
-	(dividers, doubleSided, singleItemPerPage, layoutGrid) => {
+	(dividers, doubleSided, singleItemPerPage, layoutGrid, layout) => {
 		if (!layoutGrid || !dividers) {
 			return [];
 		}
@@ -23,6 +25,7 @@ export const selectDividerPageLayouts = createSelector(
 			doubleSided,
 			singleItemPerPage,
 			layoutGrid,
+			maxItemsPerPage: layout?.maxItemsPerPage,
 		});
 	},
 );

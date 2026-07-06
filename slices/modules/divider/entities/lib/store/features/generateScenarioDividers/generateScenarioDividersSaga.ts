@@ -1,6 +1,13 @@
 import { put, select, takeEvery } from "redux-saga/effects";
-import { addManyDividers, setDividers } from "@/modules/divider/shared/lib";
+import {
+	addManyDividers,
+	createPhantomDividers,
+	getTabResetPadding,
+	selectDividersTotal,
+	setDividers,
+} from "@/modules/divider/shared/lib";
 import { selectStoryWithRelations } from "@/modules/story/entities/lib";
+import { selectLayout } from "../../selectors";
 import { generateScenarioDividers } from "./generateScenarioDividers";
 import {
 	getCampaignDividers,
@@ -43,15 +50,23 @@ function* worker({ payload }: ReturnType<typeof generateScenarioDividers>) {
 				})
 			: [];
 
-	const dividers = [
+	const newDividers = [
 		...scenarioDividers,
 		...encounterSetDividers,
 		...campaignDividers,
 	];
 
-	const actionCreator = payload.mode === "add" ? addManyDividers : setDividers;
-
-	yield put(actionCreator(dividers));
+	if (payload.mode === "add") {
+		const layout: ReturnType<typeof selectLayout> = yield select(selectLayout);
+		const existingCount: ReturnType<typeof selectDividersTotal> =
+			yield select(selectDividersTotal);
+		const tabsCount = layout?.tabs?.type === "fixed" ? layout.tabs.value : 2;
+		const phantomCount = getTabResetPadding(existingCount, tabsCount);
+		const phantoms = createPhantomDividers(phantomCount);
+		yield put(addManyDividers([...phantoms, ...newDividers]));
+	} else {
+		yield put(setDividers(newDividers));
+	}
 }
 
 export function* generateScenarioDividersSaga() {
