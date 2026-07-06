@@ -43,6 +43,13 @@ const horizontalLowerBody: ArkhamIndexDividerLayout = {
 	name: "Lower Body",
 	creasingTop: 38,
 	maxItemsPerPage: 14,
+	bleed: 1,
+	printSize: {
+		300: {
+			size: createSize(1087, 898),
+			bleedSize: createSize(1110, 921),
+		},
+	},
 };
 
 const medium: ArkhamIndexDividerLayout = {
