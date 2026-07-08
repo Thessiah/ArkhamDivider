@@ -2,6 +2,7 @@ import {
 	arkhamIndexDividerHorizontalLowerBodyObjects,
 	arkhamIndexDividerHorizontalObjects,
 	arkhamIndexDividerHorizontalSmallObjects,
+	arkhamIndexDividerPillObjects,
 	arkhamIndexDividerVerticalMediumObjects,
 	arkhamIndexDividerVerticalObjects,
 	arkhamIndexDividerVerticalTrimObjects,
@@ -22,6 +23,9 @@ export const getArkhamIndexDividerLayoutObjects = (
 	}
 	if (layout.id === "arkham-index-lower-body") {
 		return arkhamIndexDividerHorizontalLowerBodyObjects;
+	}
+	if (layout.groupId === "pill") {
+		return arkhamIndexDividerPillObjects;
 	}
 	if (layout.orientation === "horizontal") {
 		return arkhamIndexDividerHorizontalObjects;

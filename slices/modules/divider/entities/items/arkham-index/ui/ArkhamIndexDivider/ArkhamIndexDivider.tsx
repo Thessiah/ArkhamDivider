@@ -105,6 +105,7 @@ export function ArkhamIndexDivider(props: ArkhamIndexDividerProps) {
 
 	const isLowerBodyClipActive =
 		layout.id === "arkham-index-lower-body" && tabSize !== "full";
+	const isPill = layout.groupId === "pill";
 
 	const { side } = props;
 
@@ -149,11 +150,13 @@ export function ArkhamIndexDivider(props: ArkhamIndexDividerProps) {
 					)}
 				</BleedView>
 				<C.Layer side={props.side}>
-					<CreaseLine offset={layout.creasingTop} />
-					<Box sx={bodySx}>
-						{showMediaContent && <MediaContent sx={mediaContentSx} />}
-						<Menu dividerId={props.id} sx={menuSx} />
-					</Box>
+					{!isPill && <CreaseLine offset={layout.creasingTop} />}
+					{!isPill && (
+						<Box sx={bodySx}>
+							{showMediaContent && <MediaContent sx={mediaContentSx} />}
+							<Menu dividerId={props.id} sx={menuSx} />
+						</Box>
+					)}
 					<Tab />
 					<NotExportable
 						visible={!lasercutEnabled}
@@ -171,8 +174,12 @@ export function ArkhamIndexDivider(props: ArkhamIndexDividerProps) {
 							title={t("divider.arkhamIndex.background.pickerTitle")}
 						/>
 					</NotExportable>
-					<CardsCount sx={infoSx} onClick={setShowCardsInfo.toggle} />
-					{showCardsInfo && <CardsInfo sx={dividerCardsSx} divider={props} />}
+					{!isPill && (
+						<CardsCount sx={infoSx} onClick={setShowCardsInfo.toggle} />
+					)}
+					{!isPill && showCardsInfo && (
+						<CardsInfo sx={dividerCardsSx} divider={props} />
+					)}
 
 					{showBackgroundIcon && (
 						<Box

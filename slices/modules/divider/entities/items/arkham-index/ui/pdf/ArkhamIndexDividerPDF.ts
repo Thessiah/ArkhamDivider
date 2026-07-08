@@ -7,6 +7,7 @@ import {
 import type { PDFDivider } from "@/modules/pdf/shared/model";
 import { selectShowCornerRadius } from "@/modules/print/shared/lib";
 import type { RootState } from "@/shared/store";
+import { pillIconManifest } from "../../config";
 import {
 	getArkhamIndexDividerIconLeft,
 	getArkhamIndexDividerLayoutObjects,
@@ -218,7 +219,9 @@ export const ArkhamIndexDividerPDF: PDFDivider<
 		if (icon && typeof icon === "string") {
 			const iconDef = ctx.icon.icons[icon];
 			if (iconDef) {
-				const fontSizePt = mm(O.icon.fontSize);
+				const iconScale =
+					layout.groupId === "pill" ? (pillIconManifest[icon]?.scale ?? 1) : 1;
+				const fontSizePt = mm(O.icon.fontSize) * iconScale;
 				const glyphWidthPt = (iconDef.ratio ?? 1) * fontSizePt;
 
 				const iconBox = bleed.box({

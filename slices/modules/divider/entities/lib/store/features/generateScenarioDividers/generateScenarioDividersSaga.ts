@@ -61,7 +61,9 @@ function* worker({ payload }: ReturnType<typeof generateScenarioDividers>) {
 		const existingCount: ReturnType<typeof selectDividersTotal> =
 			yield select(selectDividersTotal);
 		const tabsCount = layout?.tabs?.type === "fixed" ? layout.tabs.value : 2;
-		const phantomCount = getTabResetPadding(existingCount, tabsCount);
+		const phantomCount = layout?.tabs
+			? getTabResetPadding(existingCount, tabsCount)
+			: 0;
 		const phantoms = createPhantomDividers(phantomCount);
 		yield put(addManyDividers([...phantoms, ...newDividers]));
 	} else {

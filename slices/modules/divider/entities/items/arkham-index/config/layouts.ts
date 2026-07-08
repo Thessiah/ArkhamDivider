@@ -52,6 +52,24 @@ const horizontalLowerBody: ArkhamIndexDividerLayout = {
 	},
 };
 
+const pill: ArkhamIndexDividerLayout = {
+	...horizontal,
+	id: "arkham-index-pill",
+	groupId: "pill",
+	name: "Pill",
+	size: createSize(50, 8),
+	printSize: {
+		300: {
+			size: createSize(591, 94),
+			bleedSize: createSize(638, 142),
+		},
+	},
+	tabs: null,
+	params: {
+		title: false,
+	},
+};
+
 const medium: ArkhamIndexDividerLayout = {
 	...horizontal,
 	id: "arkham-index-medium",
@@ -177,6 +195,7 @@ const verticalTrim100: ArkhamIndexDividerLayout = {
 export const arkhamIndexLayouts: DividerLayout[] = [
 	horizontal,
 	horizontalLowerBody,
+	pill,
 	medium,
 	trim,
 	vertical,

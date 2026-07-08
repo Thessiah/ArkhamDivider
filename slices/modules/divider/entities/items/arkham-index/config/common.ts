@@ -252,3 +252,25 @@ export const arkhamIndexDividerVerticalTrimObjects = mergeDeepRight(
 		},
 	},
 );
+
+export const arkhamIndexDividerPillObjects = mergeDeepRight(
+	arkhamIndexDividerHorizontalObjects,
+	{
+		icon: {
+			top: 1,
+			width: 6,
+			edgeMargin: 1,
+		},
+		tabTitle: {
+			default: {
+				top: 1,
+			},
+			fullOffset: {
+				default: 8,
+			},
+			full: {
+				right: 10,
+			},
+		},
+	},
+);

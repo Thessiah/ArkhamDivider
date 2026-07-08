@@ -14,7 +14,7 @@ import { usePrintSx, usePrintUnitCallback } from "@/modules/print/shared/lib";
 import { NotExportable } from "@/modules/render/shared/ui";
 import { useAppDispatch } from "@/shared/lib";
 import { FitInput, Image } from "@/shared/ui";
-import { arkhamIndexDividerBaseUrl } from "../../../config";
+import { arkhamIndexDividerBaseUrl, pillIconManifest } from "../../../config";
 import {
 	getArkhamIndexDividerIconLeft,
 	getArkhamIndexDividerSideObject,
@@ -181,6 +181,10 @@ export function ArkhamIndexDividerTab() {
 	});
 
 	const canChangeSize = layout.params?.title !== false;
+	const isPill = layout.groupId === "pill";
+	const iconCorrectionProps = isPill
+		? { manifest: pillIconManifest }
+		: { disableCorrection: true as const };
 
 	return (
 		<>
@@ -245,7 +249,7 @@ export function ArkhamIndexDividerTab() {
 						sx={iconGlyphStrokeSx}
 						scaleType={false}
 						resizeDisabled
-						disableCorrection
+						{...iconCorrectionProps}
 					/>
 					<Icon
 						dividerId={divider.id}
@@ -253,7 +257,7 @@ export function ArkhamIndexDividerTab() {
 						sx={iconGlyphSx}
 						scaleType={false}
 						resizeDisabled
-						disableCorrection
+						{...iconCorrectionProps}
 					/>
 				</Box>
 			)}
