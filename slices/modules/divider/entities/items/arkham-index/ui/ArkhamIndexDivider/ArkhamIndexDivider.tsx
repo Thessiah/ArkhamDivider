@@ -1,7 +1,6 @@
 // import * as C from "./ArkhamIndexDivider.components";
 
 import { Box } from "@mui/material";
-import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { selectLayout } from "@/modules/divider/entities/lib";
 import {
@@ -12,8 +11,6 @@ import {
 	DividerCreaseLine as CreaseLine,
 	DividerMenu as Menu,
 } from "@/modules/divider/entities/ui";
-import { useDividerIcon } from "@/modules/divider/features/lib";
-import { DividerIcon } from "@/modules/divider/features/ui";
 import { selectDividerTabIndex } from "@/modules/divider/shared/lib";
 import { selectLasercutEnabled, usePrintSx } from "@/modules/print/shared/lib";
 import { NotExportable } from "@/modules/render/shared/ui";
@@ -62,15 +59,6 @@ export function ArkhamIndexDivider(props: ArkhamIndexDividerProps) {
 		? "none"
 		: getArkhamIndexDividerDefaultFilter(props);
 
-	const getDividerIcon = useDividerIcon({ dividerId: props.id });
-
-	const [backgroundIcon, selectBackgroundIcon] = getDividerIcon({
-		param: "icon",
-		defaultIcon: props.icon,
-	});
-
-	const showBackgroundIcon = props.layoutType === "player";
-
 	const tabSize = getArkhamIndexDividerTabSize({
 		divider: props,
 		layout,
@@ -82,22 +70,12 @@ export function ArkhamIndexDivider(props: ArkhamIndexDividerProps) {
 		tabSize,
 	});
 
-	const backgroundSxOptions = useMemo(() => {
-		return {
-			backgroundIcon,
-		};
-	}, [backgroundIcon]);
-
 	const getPrintSx = usePrintSx(sxOptions);
 	const backgroundSx = getPrintSx(S.getBackgroundSx);
 	const backgroundStrokeSx = getPrintSx(S.getBackgroundStrokeSx);
 	const bodySx = getPrintSx(S.getBodySx);
 	const mediaContentSx = getPrintSx(S.getMediaContentSx);
 	const colorPickerSx = getPrintSx(S.getColorPickerSx);
-	const backgroundIconSx = getPrintSx(
-		S.getBackgroundIconSx,
-		backgroundSxOptions,
-	);
 	const menuSx = getPrintSx(S.getMenuSx);
 	const infoSx = getPrintSx(S.getInfoSx);
 	const dividerCardsSx = getPrintSx(S.getDividerCardsSx);
@@ -126,16 +104,6 @@ export function ArkhamIndexDivider(props: ArkhamIndexDividerProps) {
 							zIndex: 1,
 						}}
 					/>
-					{showBackgroundIcon && (
-						<C.Layer side={props.side}>
-							<DividerIcon
-								dividerId={props.id}
-								icon={backgroundIcon}
-								sx={backgroundIconSx}
-								visible
-							/>
-						</C.Layer>
-					)}
 					{backgroundColor && (
 						<Box
 							sx={{
@@ -179,28 +147,6 @@ export function ArkhamIndexDivider(props: ArkhamIndexDividerProps) {
 					)}
 					{!isPill && showCardsInfo && (
 						<CardsInfo sx={dividerCardsSx} divider={props} />
-					)}
-
-					{showBackgroundIcon && (
-						<Box
-							sx={{
-								...backgroundIconSx,
-								zIndex: 4,
-								aspectRatio: 1,
-								left: "50%",
-								transform: "translate(-50%, -50%)",
-								height: "1.2em",
-								mixBlendMode: "color",
-								borderRadius: "50%",
-								blur: "2px",
-								"@media screen": {
-									":hover": {
-										backgroundColor: "rgba(255, 255, 255, 0.01)",
-									},
-								},
-							}}
-							onClick={selectBackgroundIcon}
-						/>
 					)}
 				</C.Layer>
 			</Container>

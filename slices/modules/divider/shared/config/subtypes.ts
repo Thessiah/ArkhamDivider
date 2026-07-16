@@ -21,4 +21,9 @@ export const subtypes: DividerSubtypeItem[] = [
 		icon: "pencil",
 		name: "Customizations",
 	},
+	{
+		type: "player_references",
+		icon: "per_investigator",
+		name: "Player References",
+	},
 ];

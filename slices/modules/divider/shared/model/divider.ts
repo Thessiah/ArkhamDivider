@@ -46,7 +46,8 @@ export type DividerSubtype =
 	| "weakness"
 	| "basic_weakness"
 	| "bonded"
-	| "customizations";
+	| "customizations"
+	| "player_references";
 export type DividerSubtypeItem = {
 	type: DividerSubtype;
 	icon: string;

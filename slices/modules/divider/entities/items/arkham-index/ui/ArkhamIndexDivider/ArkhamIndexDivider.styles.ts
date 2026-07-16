@@ -1,5 +1,3 @@
-import { isString } from "ramda-adjunct";
-import type { Icon } from "@/modules/core/icon/shared/model";
 import type { PrintSxCallback } from "@/modules/print/shared/model";
 import type {
 	ArkhamIndexDividerLayout,
@@ -45,63 +43,6 @@ export const getColorPickerSx: PrintSxCallback = ({ mm }) => ({
 	outline: `${mm(0.2)} solid rgba(255, 255, 255, 0.5)`,
 	borderRadius: "50%",
 });
-
-export const getBackgroundIconSx: ArkhamIndexDividerSxCallback<{
-	backgroundIcon?: Icon | null;
-}> = ({ mm, objects: O, backgroundIcon }) => {
-	interface Config {
-		y: number;
-		scale: number;
-	}
-	const config: Record<string, Config> = {
-		neutral: {
-			y: 2,
-			scale: 1.3,
-		},
-		guardian: {
-			y: 4,
-			scale: 1,
-		},
-		seeker: {
-			y: 0,
-			scale: 1.2,
-		},
-		rogue: {
-			y: 3,
-			scale: 1.4,
-		},
-		mystic: {
-			y: 5,
-			scale: 1.4,
-		},
-		survivor: {
-			y: 4,
-			scale: 1.3,
-		},
-		multiclass: {
-			y: 2,
-			scale: 1.1,
-		},
-	};
-	const defaultConfig = {
-		y: 0,
-		scale: 1,
-	};
-	const F =
-		isString(backgroundIcon) && config[backgroundIcon]
-			? config[backgroundIcon]
-			: defaultConfig;
-	return {
-		position: "absolute",
-		fontSize: mm(O.backgroundIcon.fontSize * F.scale),
-		top: `${50 + F.y}%`,
-		transform: "translateY(-50%)",
-		left: 0,
-		right: 0,
-		color: "rgba(255, 255, 255, 0.12)",
-		cursor: "pointer",
-	};
-};
 
 export const getMenuSx: PrintSxCallback = ({ mm }) => ({
 	position: "absolute",

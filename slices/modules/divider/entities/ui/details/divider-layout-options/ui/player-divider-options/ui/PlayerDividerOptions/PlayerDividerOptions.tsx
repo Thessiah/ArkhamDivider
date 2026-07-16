@@ -239,6 +239,7 @@ export function PlayerDividerOptions(props: BoxProps) {
 					>
 						{renderSubtype("weakness")}
 						{renderSubtype("basic_weakness")}
+						{renderSubtype("player_references")}
 					</C.Row>
 					{showStorySelect && (
 						<C.Row alignItems="stretch">

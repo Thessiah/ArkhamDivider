@@ -101,6 +101,7 @@
 	"divider.subtype.basic_weakness": "Basic Weaknesses",
 	"divider.subtype.bonded": "Bonded Cards",
 	"divider.subtype.customizations": "Customizations",
+	"divider.subtype.player_references": "Player References",
 	"divider.subtype.ally": "Allies",
 	"layout.singleSideLayout": "Single-sided layout (when double-sided printing)",
 	"info.bleed": "Bleed is needed to remove white borders from the divider edges due to the inevitable error of the knife in 1–2 mm and deviations when printing on both sides",
