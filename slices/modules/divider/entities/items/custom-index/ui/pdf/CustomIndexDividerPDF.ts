@@ -156,27 +156,48 @@ export const CustomIndexDividerPDF: PDFDivider<
 
 		const title = props.customTitle ?? props.title;
 		const fontSizeScale = props.fontSizeScale ?? 100;
+		const wordWrap = customIndexSettings.wordWrap;
+		const characterSpacing = mm(customIndexSettings.letterSpacing);
 
 		const titleBox = bleed.box({
-			top: T.top,
+			top: wordWrap ? 0 : T.top,
 			left: tabLeft + T.left,
 			width: tabWidth - T.left - T.right,
-			height: T.height,
+			height: wordWrap ? O.tab.height : T.height,
 		});
 
 		const titleFontSize = mm((fontSizeScale / 100) * T.fontSize);
+		const lineGap = titleFontSize * (customIndexSettings.lineHeight - 1);
+
+		// Wrap mode: measure the block and center it in the tab (PDFKit's
+		// baseline:"middle" only centers the first line).
+		let titleY = titleBox.y();
+		let baseline: "middle" | "top" = "middle";
+		if (wordWrap) {
+			const textHeight = await text.measureTextHeight({
+				text: title,
+				fontFamily: customIndexSettings.font,
+				fontSize: titleFontSize,
+				width: titleBox.width(),
+				lineGap,
+				characterSpacing,
+				lineBreak: true,
+			});
+			titleY = titleBox.y() + Math.max(0, (titleBox.height() - textHeight) / 2);
+			baseline = "top";
+		}
 
 		await text.draw(title, {
 			x: titleBox.x(),
-			y: titleBox.y(),
+			y: titleY,
 			width: titleBox.width(),
 			height: titleBox.height(),
 			fontSize: titleFontSize,
-			characterSpacing: mm(customIndexSettings.letterSpacing),
-			lineGap: titleFontSize * (customIndexSettings.lineHeight - 1),
-			lineBreak: customIndexSettings.wordWrap,
+			characterSpacing,
+			lineGap,
+			lineBreak: wordWrap,
 			align: "left",
-			baseline: "middle",
+			baseline,
 			fontFamily: customIndexSettings.font,
 			color: black,
 			overprint: true,

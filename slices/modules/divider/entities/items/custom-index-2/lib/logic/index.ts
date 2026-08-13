@@ -1,4 +1,5 @@
 export * from "./getCustomIndex2DividerBackgroundPath";
+export * from "./getCustomIndex2DividerIconDrawBox";
 export * from "./getCustomIndex2DividerIconLeft";
 export * from "./getCustomIndex2DividerTabIndentSize";
 export * from "./getCustomIndex2DividerTabSize";

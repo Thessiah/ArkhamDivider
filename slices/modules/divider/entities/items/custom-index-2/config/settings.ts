@@ -35,7 +35,7 @@ export type CustomIndex2Settings = {
 export const customIndex2Settings: CustomIndex2Settings = {
 	font: "CustomIndex2",
 	background: "/tab-2.png",
-	titleFontSize: 4.25,
+	titleFontSize: 4,
 	wordWrap: true,
 	letterSpacing: 0.1,
 	lineHeight: 1,

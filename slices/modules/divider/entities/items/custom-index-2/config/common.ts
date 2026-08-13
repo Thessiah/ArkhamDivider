@@ -33,20 +33,37 @@ const tabIconSlotHeight = tabTitleHeight;
 const tabIconToTitleGap = 1;
 /** Inner padding so stroke/glow stays inside the icon slot. */
 const tabIconGlowInset = 1.5;
-const horizontalTabIconSlotWidth = 10.1;
-const horizontalIconEdgeMargin = 4.5 - tabTitleOffsetReduction;
+const horizontalTabHeight = 8;
+/**
+ * PNG tab icons fill the tab height and overhang the outer corner slightly
+ * (top + side). Negative `edgeMargin` is what pushes them past the tab edge
+ * into the divider body; `top` is pulled up by the same amount so the bleed
+ * is centered on the corner.
+ */
+const horizontalIconBleed = 0.2;
+/** Soft fade length on the icon edge facing the tab title (mm). */
+export const customIndex2IconTextEdgeFade = 0;
+const horizontalTabIconSlotSize = horizontalTabHeight + horizontalIconBleed;
+const horizontalIconEdgeMargin = -horizontalIconBleed;
 const horizontalTabTextSideMargin = 2;
 const horizontalTabTitleTop = tabTitleTop - 0.75 + verticalShift;
+/** In-tab footprint used to reserve title space (bleed sits outside the tab). */
+const horizontalIconInTabSize = horizontalTabHeight;
+const horizontalIconTitleGap = 2;
+/** Title inset on the icon side (matches the left-tab gap that already looked right). */
+const horizontalIconTitleInset =
+	horizontalIconInTabSize + horizontalIconTitleGap;
 
 const horizontalTabWidths: Record<number, number> = {
 	1: (25 + sideOffsetWidth) * 1.25,
+	// Size 2 is overridden to `layout.size.width / 2` via withHalfWidthSize2Tab.
 	2: 46,
 	3: 68 + sideOffsetWidth,
 };
 
 export const customIndex2DividerHorizontalObjects = {
 	tab: {
-		height: 8,
+		height: horizontalTabHeight,
 		width: horizontalTabWidths,
 		sideWidth: tabSideWidth,
 		indentSize: 9,
@@ -54,9 +71,9 @@ export const customIndex2DividerHorizontalObjects = {
 	cornerRadius: 3,
 	icon: {
 		fontSize: tabIconFontSize,
-		top: horizontalTabTitleTop,
-		width: horizontalTabIconSlotWidth,
-		height: tabIconSlotHeight,
+		top: -horizontalIconBleed,
+		width: horizontalTabIconSlotSize,
+		height: horizontalTabIconSlotSize,
 		glowInset: 0,
 		edgeMargin: horizontalIconEdgeMargin,
 	},
@@ -91,20 +108,12 @@ export const customIndex2DividerHorizontalObjects = {
 			right: 11 - tabSideWidthReduction - tabTitleExtraRightReduction,
 		},
 		withIcon: {
-			left:
-				horizontalIconEdgeMargin +
-				tabIconSlotHeight / 2 +
-				tabIconFontSize / 2 +
-				horizontalTabTextSideMargin,
-			right:
-				horizontalIconEdgeMargin +
-				tabIconSlotHeight / 2 +
-				tabIconFontSize / 2 +
-				horizontalTabTextSideMargin * 2,
+			left: horizontalIconTitleInset,
+			right: horizontalIconTitleInset,
 		},
 		withIconRight: undefined as { left: number } | undefined,
 		fullOffset: {
-			default: 7,
+			default: horizontalIconTitleInset + horizontalTabTextSideMargin,
 		},
 		full: {
 			right: 19,
@@ -234,11 +243,16 @@ export const customIndex2DividerPillObjects = mergeDeepRight(
 		icon: {
 			top: pillTabTitleTop,
 			width: 6,
+			height: 6,
 			edgeMargin: 1,
 		},
 		tabTitle: {
 			default: {
 				top: pillTabTitleTop,
+			},
+			withIcon: {
+				left: 6 + horizontalIconTitleGap,
+				right: 6 + horizontalIconTitleGap,
 			},
 			fullOffset: {
 				default: 8,

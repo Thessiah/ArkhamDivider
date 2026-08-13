@@ -15,6 +15,8 @@ export const getBackgroundStrokeSx: PrintSxCallback = () => ({
 	inset: 0,
 	objectFit: "cover",
 	pointerEvents: "none",
+	// Above tab icons so corner bleed reads against the cut path in the web UI.
+	zIndex: 6,
 });
 
 export const getBodySx: CustomIndex2DividerSxCallback = ({

@@ -1,4 +1,5 @@
 import { percent } from "@/shared/util";
+import { customIndexSettings } from "../../../config";
 import { getCustomIndexDividerTabTitleObject as getTitleObject } from "../../../lib/logic/objects/getCustomIndexDividerTabTitleObject";
 import type { CustomIndexDividerSxCallback } from "../../../model";
 
@@ -32,18 +33,23 @@ export const getIconWrapperSx: SxCallback = (options) => {
 };
 
 export const getTitleSx: SxCallback = (options) => {
-	const { mm, tabWidth, tabLeft } = options;
+	const { mm, tabWidth, tabLeft, objects } = options;
 	const T = getTitleObject(options);
-	const width = tabWidth - T.right;
+	const width = tabWidth - T.left - T.right;
 	const left = tabLeft + T.left;
+	// When wrapping is on, fill the tab so 1- and 2-line titles can center vertically.
+	const top = customIndexSettings.wordWrap ? 0 : T.top;
+	const height = customIndexSettings.wordWrap ? objects.tab.height : T.height;
 
 	return {
 		position: "absolute",
 		fontSize: mm(T.fontSize),
-		top: mm(T.top),
+		top: mm(top),
 		left: mm(left),
 		width: mm(width),
-		height: mm(T.height),
+		height: mm(height),
+		display: "flex",
+		alignItems: "center",
 	};
 };
 

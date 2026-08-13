@@ -1,4 +1,9 @@
 import { percent } from "@/shared/util";
+import {
+	customIndex2IconTextEdgeFade,
+	customIndex2Settings,
+} from "../../../config";
+import { getCustomIndex2DividerIconDrawBox } from "../../../lib/logic/getCustomIndex2DividerIconDrawBox";
 import { getCustomIndex2DividerTabTitleObject as getTitleObject } from "../../../lib/logic/objects/getCustomIndex2DividerTabTitleObject";
 import type { CustomIndex2DividerSxCallback } from "../../../model";
 
@@ -15,35 +20,67 @@ type SxCallback<T = void> = CustomIndex2DividerSxCallback<Options & T>;
 export const getIconWrapperSx: SxCallback = (options) => {
 	const glowInset = options.objects.icon.glowInset ?? 0;
 	const isRight = options.iconPosition === "right";
+	const fade = options.mm(customIndex2IconTextEdgeFade);
+	// Visual-only widen toward the title; title insets still use the un-extended slot.
+	const drawBox = getCustomIndex2DividerIconDrawBox({
+		iconLeft: options.iconLeft,
+		iconWidth: options.objects.icon.width,
+		iconPosition: options.iconPosition,
+	});
+	// Fade the edge toward the title (left edge when icon is on the right, and vice versa).
+	const maskImage = isRight
+		? `linear-gradient(to right, transparent 0, #000 ${fade}, #000 100%)`
+		: `linear-gradient(to left, transparent 0, #000 ${fade}, #000 100%)`;
 
 	return {
 		position: "absolute",
-		zIndex: 5,
-		left: options.mm(options.iconLeft),
+		// Stay under the red cut-path stroke so bleed past the tab corner is visible.
+		zIndex: 1,
+		left: options.mm(drawBox.left),
 		top: options.mm(options.objects.icon.top),
-		width: options.mm(options.objects.icon.width),
+		width: options.mm(drawBox.width),
 		height: options.mm(options.objects.icon.height),
 		paddingTop: options.mm(0),
 		paddingBottom: options.mm(glowInset),
 		paddingLeft: options.mm(isRight ? glowInset : 0),
 		paddingRight: options.mm(isRight ? 0 : glowInset),
 		boxSizing: "border-box",
+		overflow: "visible",
+		pointerEvents: "none",
+		WebkitMaskImage: maskImage,
+		maskImage,
 	};
 };
 
+/** Cover the slot and bias toward the tab's outer corner so square icons fill
+ *  the tab height and slightly bleed past the top-right (or top-left on the
+ *  alternate / right-edge tab). */
+export const getIconImageSx: SxCallback = (options) => ({
+	width: "100%",
+	height: "100%",
+	objectFit: "cover",
+	objectPosition: options.iconPosition === "right" ? "top right" : "top left",
+	display: "block",
+});
+
 export const getTitleSx: SxCallback = (options) => {
-	const { mm, tabWidth, tabLeft } = options;
+	const { mm, tabWidth, tabLeft, objects } = options;
 	const T = getTitleObject(options);
-	const width = tabWidth - T.right;
+	const width = tabWidth - T.left - T.right;
 	const left = tabLeft + T.left;
+	// When wrapping is on, fill the tab so 1- and 2-line titles can center vertically.
+	const top = customIndex2Settings.wordWrap ? 0 : T.top;
+	const height = customIndex2Settings.wordWrap ? objects.tab.height : T.height;
 
 	return {
 		position: "absolute",
 		fontSize: mm(T.fontSize),
-		top: mm(T.top),
+		top: mm(top),
 		left: mm(left),
 		width: mm(width),
-		height: mm(T.height),
+		height: mm(height),
+		display: "flex",
+		alignItems: "center",
 	};
 };
 

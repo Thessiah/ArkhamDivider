@@ -3,8 +3,12 @@ import { selectDividerTabIndex } from "@/modules/divider/shared/lib";
 import type { PDFDivider } from "@/modules/pdf/shared/model";
 import { selectShowCornerRadius } from "@/modules/print/shared/lib";
 import type { RootState } from "@/shared/store";
-import { customIndex2Settings } from "../../config";
 import {
+	customIndex2IconTextEdgeFade,
+	customIndex2Settings,
+} from "../../config";
+import {
+	getCustomIndex2DividerIconDrawBox,
 	getCustomIndex2DividerIconLeft,
 	getCustomIndex2DividerLayoutObjects,
 	getCustomIndex2DividerTabIndentSize,
@@ -114,21 +118,37 @@ export const CustomIndex2DividerPDF: PDFDivider<
 		const iconImage = props.params?.iconImage;
 
 		if (iconImage) {
+			// Visual-only widen toward the title; title layout still uses iconLeft/O.icon.width.
+			const drawBox = getCustomIndex2DividerIconDrawBox({
+				iconLeft,
+				iconWidth: O.icon.width,
+				iconPosition,
+			});
 			const iconBox = bleed.box({
 				top: O.icon.top,
-				left: iconLeft,
-				width: O.icon.width,
+				left: drawBox.left,
+				width: drawBox.width,
 				height: O.icon.height,
 			});
 
 			const response = await fetch(iconImage);
 			const arrayBuffer = await response.arrayBuffer();
 
+			// Cover + corner align matches the on-screen object-fit/object-position
+			// for custom-index-2 only (PDFImageService defaults stay contain/center).
 			image.drawImage(arrayBuffer, {
 				x: iconBox.x(),
 				y: iconBox.y(),
 				width: iconBox.width(),
 				height: iconBox.height(),
+				fit: "cover",
+				align: iconPosition === "right" ? "right" : "left",
+				valign: "top",
+				// Fade the edge facing the title (mirrors the CSS mask in the web UI).
+				fadeEdge: {
+					side: iconPosition === "right" ? "left" : "right",
+					width: mm(customIndex2IconTextEdgeFade),
+				},
 			});
 		}
 	}
@@ -156,27 +176,48 @@ export const CustomIndex2DividerPDF: PDFDivider<
 
 		const title = props.customTitle ?? props.title;
 		const fontSizeScale = props.fontSizeScale ?? 100;
+		const wordWrap = customIndex2Settings.wordWrap;
+		const characterSpacing = mm(customIndex2Settings.letterSpacing);
 
 		const titleBox = bleed.box({
-			top: T.top,
+			top: wordWrap ? 0 : T.top,
 			left: tabLeft + T.left,
 			width: tabWidth - T.left - T.right,
-			height: T.height,
+			height: wordWrap ? O.tab.height : T.height,
 		});
 
 		const titleFontSize = mm((fontSizeScale / 100) * T.fontSize);
+		const lineGap = titleFontSize * (customIndex2Settings.lineHeight - 1);
+
+		// Wrap mode: measure the block and center it in the tab (PDFKit's
+		// baseline:"middle" only centers the first line).
+		let titleY = titleBox.y();
+		let baseline: "middle" | "top" = "middle";
+		if (wordWrap) {
+			const textHeight = await text.measureTextHeight({
+				text: title,
+				fontFamily: customIndex2Settings.font,
+				fontSize: titleFontSize,
+				width: titleBox.width(),
+				lineGap,
+				characterSpacing,
+				lineBreak: true,
+			});
+			titleY = titleBox.y() + Math.max(0, (titleBox.height() - textHeight) / 2);
+			baseline = "top";
+		}
 
 		await text.draw(title, {
 			x: titleBox.x(),
-			y: titleBox.y(),
+			y: titleY,
 			width: titleBox.width(),
 			height: titleBox.height(),
 			fontSize: titleFontSize,
-			characterSpacing: mm(customIndex2Settings.letterSpacing),
-			lineGap: titleFontSize * (customIndex2Settings.lineHeight - 1),
-			lineBreak: customIndex2Settings.wordWrap,
+			characterSpacing,
+			lineGap,
+			lineBreak: wordWrap,
 			align: "left",
-			baseline: "middle",
+			baseline,
 			fontFamily: customIndex2Settings.font,
 			color: black,
 			overprint: true,

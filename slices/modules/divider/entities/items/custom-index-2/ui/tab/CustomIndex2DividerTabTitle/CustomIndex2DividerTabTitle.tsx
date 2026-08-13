@@ -41,7 +41,13 @@ export function CustomIndex2DividerTabTitle(
 			<DividerText
 				dividerId={divider.id}
 				sx={textSx}
-				containerSx={{ lineHeight: customIndex2Settings.lineHeight }}
+				fit={!customIndex2Settings.wordWrap}
+				inputSx={{ height: "100%" }}
+				containerSx={{
+					lineHeight: customIndex2Settings.lineHeight,
+					height: "100%",
+					width: "100%",
+				}}
 				value={title}
 				defaultValue={defaultValue}
 				fitTextOptions={

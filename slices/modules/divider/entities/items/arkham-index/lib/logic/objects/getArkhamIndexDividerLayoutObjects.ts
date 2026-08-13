@@ -1,3 +1,4 @@
+import { withHalfWidthSize2Tab } from "@/modules/divider/shared/lib/logic/tab";
 import {
 	arkhamIndexDividerHorizontalLowerBodyObjects,
 	arkhamIndexDividerHorizontalObjects,
@@ -19,16 +20,22 @@ export const getArkhamIndexDividerLayoutObjects = (
 		return arkhamIndexDividerVerticalMediumObjects;
 	}
 	if (layout.id.includes("trim")) {
-		return arkhamIndexDividerHorizontalSmallObjects;
+		return withHalfWidthSize2Tab(
+			arkhamIndexDividerHorizontalSmallObjects,
+			layout,
+		);
 	}
 	if (layout.id === "arkham-index-lower-body") {
-		return arkhamIndexDividerHorizontalLowerBodyObjects;
+		return withHalfWidthSize2Tab(
+			arkhamIndexDividerHorizontalLowerBodyObjects,
+			layout,
+		);
 	}
 	if (layout.groupId === "pill") {
-		return arkhamIndexDividerPillObjects;
+		return withHalfWidthSize2Tab(arkhamIndexDividerPillObjects, layout);
 	}
 	if (layout.orientation === "horizontal") {
-		return arkhamIndexDividerHorizontalObjects;
+		return withHalfWidthSize2Tab(arkhamIndexDividerHorizontalObjects, layout);
 	}
 	return arkhamIndexDividerVerticalObjects;
 };

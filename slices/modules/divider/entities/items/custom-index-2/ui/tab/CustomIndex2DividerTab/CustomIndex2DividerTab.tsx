@@ -90,6 +90,7 @@ export function CustomIndex2DividerTab() {
 	const getPrintSx = usePrintSx(tabSxOptions);
 
 	const iconWrapperSx = getPrintSx(S.getIconWrapperSx);
+	const iconImageSx = getPrintSx(S.getIconImageSx);
 	const titleSx = getPrintSx(S.getTitleSx);
 	const shiftLeftSx = getPrintSx(S.getShiftSx, leftPosition);
 	const shiftRightSx = getPrintSx(S.getShiftSx, rightPosition);
@@ -195,10 +196,7 @@ export function CustomIndex2DividerTab() {
 			)}
 			{showGlyph && iconImage && (
 				<Box sx={iconWrapperSx}>
-					<Image
-						src={iconImage}
-						sx={{ width: "100%", height: "100%", objectFit: "contain" }}
-					/>
+					<Image src={iconImage} sx={iconImageSx} />
 				</Box>
 			)}
 			{showTitle && <TabTitle sx={titleSx} />}

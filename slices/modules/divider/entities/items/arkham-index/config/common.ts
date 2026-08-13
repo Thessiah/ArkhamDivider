@@ -34,6 +34,7 @@ const horizontalTabTitleTop = tabTitleTop - 0.75;
 
 const horizontalTabWidths: Record<number, number> = {
 	1: (25 + sideOffsetWidth) * 1.25,
+	// Size 2 is overridden to `layout.size.width / 2` via withHalfWidthSize2Tab.
 	2: 46,
 	3: 68 + sideOffsetWidth,
 };

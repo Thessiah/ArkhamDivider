@@ -37,6 +37,33 @@ export class PDFTextService {
 		return this.doc.widthOfString(text);
 	}
 
+	async measureTextHeight({
+		text,
+		fontFamily,
+		fontSize,
+		width,
+		lineGap = 0,
+		characterSpacing,
+		lineBreak = true,
+	}: {
+		text: string;
+		fontFamily: FontFamily;
+		fontSize: number;
+		width: number;
+		lineGap?: number;
+		characterSpacing?: number;
+		lineBreak?: boolean;
+	}) {
+		await this.font.load(fontFamily);
+		this.doc.fontSize(fontSize);
+		return this.doc.heightOfString(text, {
+			width,
+			lineGap,
+			characterSpacing,
+			lineBreak,
+		});
+	}
+
 	async draw(text: string, options: DrawTextOptions) {
 		const {
 			fontFamily,

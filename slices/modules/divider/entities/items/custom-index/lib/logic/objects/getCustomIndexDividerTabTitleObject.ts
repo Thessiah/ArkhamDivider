@@ -36,16 +36,21 @@ export const getCustomIndexDividerTabTitleObject = (options: Options) => {
 
 const getBaseObject = ({ objects: O, showIcon, iconPosition }: Options) => {
 	if (showIcon) {
+		// Outer-edge margin mirrors the small side inset used when the icon is
+		// on the opposite side (default.left / withIconRight.left).
+		const outerMargin =
+			O.tabTitle.withIconRight?.left ?? O.tabTitle.default.left;
 		if (iconPosition === "right") {
 			return {
 				...O.tabTitle.default,
-				left: O.tabTitle.withIconRight?.left ?? O.tabTitle.default.left,
+				left: outerMargin,
 				right: O.tabTitle.withIcon.right,
 			};
 		}
 		return {
 			...O.tabTitle.default,
-			...O.tabTitle.withIcon,
+			left: O.tabTitle.withIcon.left,
+			right: outerMargin,
 		};
 	}
 	return O.tabTitle.default;

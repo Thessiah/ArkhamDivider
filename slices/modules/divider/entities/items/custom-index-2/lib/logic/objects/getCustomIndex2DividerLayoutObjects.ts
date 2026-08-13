@@ -1,3 +1,4 @@
+import { withHalfWidthSize2Tab } from "@/modules/divider/shared/lib/logic/tab";
 import {
 	customIndex2DividerHorizontalLowerBodyObjects,
 	customIndex2DividerHorizontalObjects,
@@ -19,16 +20,22 @@ export const getCustomIndex2DividerLayoutObjects = (
 		return customIndex2DividerVerticalMediumObjects;
 	}
 	if (layout.id.includes("trim")) {
-		return customIndex2DividerHorizontalSmallObjects;
+		return withHalfWidthSize2Tab(
+			customIndex2DividerHorizontalSmallObjects,
+			layout,
+		);
 	}
 	if (layout.id === "custom-index-2-lower-body") {
-		return customIndex2DividerHorizontalLowerBodyObjects;
+		return withHalfWidthSize2Tab(
+			customIndex2DividerHorizontalLowerBodyObjects,
+			layout,
+		);
 	}
 	if (layout.id.includes("pill")) {
-		return customIndex2DividerPillObjects;
+		return withHalfWidthSize2Tab(customIndex2DividerPillObjects, layout);
 	}
 	if (layout.orientation === "horizontal") {
-		return customIndex2DividerHorizontalObjects;
+		return withHalfWidthSize2Tab(customIndex2DividerHorizontalObjects, layout);
 	}
 	return customIndex2DividerVerticalObjects;
 };
