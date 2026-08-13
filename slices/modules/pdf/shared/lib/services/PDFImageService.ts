@@ -65,9 +65,12 @@ export class PDFImageService {
 		const { x, y, width, height, opacity = 1 } = options;
 
 		this.doc.opacity(opacity);
+		// `fit` preserves aspect ratio (like CSS object-fit: contain) instead of
+		// stretching to the box; `align`/`valign` center it within that box.
 		this.doc.image(Buffer.from(arrayBuffer), x, y, {
-			width,
-			height,
+			fit: [width, height],
+			align: "center",
+			valign: "center",
 		});
 		this.doc.opacity(1);
 	}

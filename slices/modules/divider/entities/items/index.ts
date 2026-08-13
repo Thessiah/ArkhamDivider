@@ -7,6 +7,8 @@ import { arkhamesqueClassicCategoryId } from "./arkhamesque-classic/config";
 import { binderBookmarkCategoryId } from "./binder-bookmark/config";
 import { chapter2CategoryId } from "./chapter2/config";
 import { classicCategoryId } from "./classic/config/common";
+import { customIndexCategoryId } from "./custom-index/config";
+import { customIndex2CategoryId } from "./custom-index-2/config";
 import { dividerCategories, dividerLayouts } from "./data";
 import { investigatorTokensCategoryId } from "./investigator-tokens/config";
 import { invocation2018CategoryId } from "./invocation2018/config";
@@ -66,6 +68,12 @@ const SimpleSticker = lazy(
 const ArkhamIndexDivider = lazy(
 	() => import("./arkham-index/ui/ArkhamIndexDivider/ArkhamIndexDivider"),
 );
+const CustomIndexDivider = lazy(
+	() => import("./custom-index/ui/CustomIndexDivider/CustomIndexDivider"),
+);
+const CustomIndex2Divider = lazy(
+	() => import("./custom-index-2/ui/CustomIndex2Divider/CustomIndex2Divider"),
+);
 
 export const dividerComponents: Record<
 	string,
@@ -87,4 +95,6 @@ export const dividerComponents: Record<
 	[arkhamIndexCategoryId]: ArkhamIndexDivider,
 	[binderBookmarkCategoryId]: BinderBookmark,
 	[simpleStickerCategoryId]: SimpleSticker,
+	[customIndexCategoryId]: CustomIndexDivider,
+	[customIndex2CategoryId]: CustomIndex2Divider,
 };

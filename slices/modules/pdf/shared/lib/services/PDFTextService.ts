@@ -77,7 +77,7 @@ export class PDFTextService {
 			wordCount?: number;
 		} = {
 			...textOptions,
-			lineBreak: false,
+			lineBreak: textOptions.lineBreak ?? false,
 		};
 
 		const hasUnderlineOrStrike = textPayload.underline || textPayload.strike;

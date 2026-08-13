@@ -3,5 +3,7 @@ export * from "./Alegreya";
 export * from "./ArkhamIcons";
 export * from "./Arkhamic";
 export * from "./ArnoPro";
+export * from "./CustomIndex";
+export * from "./CustomIndex2";
 export * from "./Roboto";
 export * from "./Teutonic";

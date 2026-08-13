@@ -13,6 +13,10 @@ import { chapter2CategoryId } from "./chapter2/config";
 import { Chapter2DividerPDF } from "./chapter2/ui/pdf";
 import { classicCategoryId } from "./classic/config/common";
 import { ClassicDividerPDF } from "./classic/ui";
+import { customIndexCategoryId } from "./custom-index/config";
+import { CustomIndexDividerPDF } from "./custom-index/ui/pdf";
+import { customIndex2CategoryId } from "./custom-index-2/config";
+import { CustomIndex2DividerPDF } from "./custom-index-2/ui/pdf";
 import { investigatorTokensCategoryId } from "./investigator-tokens/config";
 import { InvestigatorTokensDividerPDF } from "./investigator-tokens/ui/pdf";
 import { invocation2018CategoryId } from "./invocation2018/config";
@@ -47,4 +51,6 @@ export const dividerPDFComponents: Record<string, PDFDivider<any>> = {
 	[chapter2CategoryId]: Chapter2DividerPDF,
 	[tcgDividerStickerCategoryId]: TCGDividerStickerPDF,
 	[simpleStickerCategoryId]: SimpleStickerPDF,
+	[customIndexCategoryId]: CustomIndexDividerPDF,
+	[customIndex2CategoryId]: CustomIndex2DividerPDF,
 };

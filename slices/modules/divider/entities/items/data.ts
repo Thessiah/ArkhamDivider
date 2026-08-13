@@ -7,6 +7,8 @@ import { arkhamesqueClassicCategory } from "./arkhamesque-classic/config";
 import { binderBookmarkCategory } from "./binder-bookmark/config";
 import { chapter2Category } from "./chapter2/config/category";
 import { classicCategory } from "./classic/config";
+import { customIndexCategory } from "./custom-index/config";
+import { customIndex2Category } from "./custom-index-2/config";
 import { investigatorTokensCategory } from "./investigator-tokens/config";
 import { invocation2018Category } from "./invocation2018/config";
 import { rynoCategory } from "./ryno/config";
@@ -33,6 +35,8 @@ export const dividerCategories: DividerCategory[] = [
 	binderBookmarkCategory,
 	simpleStickerCategory,
 	arkhamIndexCategory,
+	customIndexCategory,
+	customIndex2Category,
 ];
 
 export const dividerLayouts = dividerCategories.flatMap(prop("layouts"));
