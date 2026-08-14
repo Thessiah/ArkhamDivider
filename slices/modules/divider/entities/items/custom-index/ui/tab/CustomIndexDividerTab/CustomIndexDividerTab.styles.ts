@@ -38,7 +38,9 @@ export const getTitleSx: SxCallback = (options) => {
 	const width = tabWidth - T.left - T.right;
 	const left = tabLeft + T.left;
 	// When wrapping is on, fill the tab so 1- and 2-line titles can center vertically.
-	const top = customIndexSettings.wordWrap ? 0 : T.top;
+	const top =
+		(customIndexSettings.wordWrap ? 0 : T.top) +
+		customIndexSettings.titleMarginTop;
 	const height = customIndexSettings.wordWrap ? objects.tab.height : T.height;
 
 	return {

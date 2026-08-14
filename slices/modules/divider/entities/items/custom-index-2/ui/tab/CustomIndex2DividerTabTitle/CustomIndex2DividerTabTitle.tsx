@@ -59,7 +59,6 @@ export function CustomIndex2DividerTabTitle(
 				onBlur={onBlur}
 				clearProps={{ sx: titleClearSx }}
 				outlineSx={titleOutlineSx}
-				visible
 			/>
 		</Box>
 	);

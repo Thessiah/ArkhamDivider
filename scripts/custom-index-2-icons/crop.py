@@ -49,15 +49,34 @@ for slug, settings in icons.items():
     cx = int(w * x_frac)
     cy = int(h * y_frac)
 
-    left = cx - side // 2
-    top = cy - side // 2
-    left = max(0, min(left, w - side))
-    top = max(0, min(top, h - side))
+    raw_left = cx - side // 2
+    raw_top = cy - side // 2
+    left = max(0, min(raw_left, w - side))
+    top = max(0, min(raw_top, h - side))
 
     cropped = img.crop((left, top, left + side, top + side))
     out_path = os.path.join(OUT_DIR, f"{slug}.png")
     cropped.save(out_path)
-    print(f"{slug}: x={x_frac} y={y_frac} cropFrac={crop_frac} -> {side}x{side}")
+
+    # Flag when x/y had no effect because the crop is pinned to an edge —
+    # every value in the clamped range produces an identical result, which
+    # otherwise looks like the crop is "stuck"/unresponsive to tuning.
+    clamp_notes = []
+    if raw_left != left:
+        edge = "left" if left == 0 else "right"
+        threshold = (side / 2) / w if edge == "left" else 1 - (side / 2) / w
+        clamp_notes.append(
+            f"x clamped to {edge} edge (any x {'<=' if edge == 'left' else '>='} {threshold:.3f} is identical)"
+        )
+    if raw_top != top:
+        edge = "top" if top == 0 else "bottom"
+        threshold = (side / 2) / h if edge == "top" else 1 - (side / 2) / h
+        clamp_notes.append(
+            f"y clamped to {edge} edge (any y {'<=' if edge == 'top' else '>='} {threshold:.3f} is identical)"
+        )
+    suffix = f"  [{'; '.join(clamp_notes)}]" if clamp_notes else ""
+
+    print(f"{slug}: x={x_frac} y={y_frac} cropFrac={crop_frac} -> {side}x{side}{suffix}")
 
 if missing:
     print(f"\nWARNING: no raw source image for: {', '.join(missing)}")

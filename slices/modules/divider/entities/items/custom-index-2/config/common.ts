@@ -35,15 +35,25 @@ const tabIconToTitleGap = 1;
 const tabIconGlowInset = 1.5;
 const horizontalTabHeight = 8;
 /**
- * PNG tab icons fill the tab height and overhang the outer corner slightly
- * (top + side). Negative `edgeMargin` is what pushes them past the tab edge
- * into the divider body; `top` is pulled up by the same amount so the bleed
- * is centered on the corner.
+ * PNG tab icons fill the tab height and overhang the outer top+side corner
+ * slightly, for cut-registration tolerance (see "cutter plot drift" —
+ * `edgeMargin` pushes the icon past that outer edge; `top` does the same
+ * for the top edge). The *visible* slot (`width`/`height`) only bleeds on
+ * those 2 sides, same as before.
+ *
+ * The rendered image itself, though, is drawn at `imageSize` — a second,
+ * larger size representing the slot grown symmetrically by the same bleed
+ * amount on all 4 sides (so the artwork is honestly centered on the
+ * natural square) — then clipped to the visible slot. The clip removes
+ * the overhang on the bottom/inner-text sides, where there's no cut edge
+ * to bleed for; only the top/outer corner's overhang stays visible.
  */
 const horizontalIconBleed = 0.2;
 /** Soft fade length on the icon edge facing the tab title (mm). */
 export const customIndex2IconTextEdgeFade = 0;
 const horizontalTabIconSlotSize = horizontalTabHeight + horizontalIconBleed;
+const horizontalTabIconImageSize =
+	horizontalTabHeight + 2 * horizontalIconBleed;
 const horizontalIconEdgeMargin = -horizontalIconBleed;
 const horizontalTabTextSideMargin = 2;
 const horizontalTabTitleTop = tabTitleTop - 0.75 + verticalShift;
@@ -74,6 +84,7 @@ export const customIndex2DividerHorizontalObjects = {
 		top: -horizontalIconBleed,
 		width: horizontalTabIconSlotSize,
 		height: horizontalTabIconSlotSize,
+		imageSize: horizontalTabIconImageSize,
 		glowInset: 0,
 		edgeMargin: horizontalIconEdgeMargin,
 	},
@@ -203,6 +214,9 @@ export const customIndex2DividerVerticalMediumObjects = mergeDeepRight(
 		icon: {
 			height: tabIconSlotHeight,
 			width: verticalMediumTabIconSlotWidth,
+			// No bleed/mask treatment here (not square, and never had this
+			// feature) — `imageSize` is optional and falls back to width/height.
+			imageSize: undefined as number | undefined,
 			fontSize: tabIconFontSize,
 			top: verticalMediumTabIconTop,
 			glowInset: tabIconGlowInset,
@@ -244,6 +258,8 @@ export const customIndex2DividerPillObjects = mergeDeepRight(
 			top: pillTabTitleTop,
 			width: 6,
 			height: 6,
+			// No bleed/mask treatment on the pill (never had this feature).
+			imageSize: undefined as number | undefined,
 			edgeMargin: 1,
 		},
 		tabTitle: {

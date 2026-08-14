@@ -160,7 +160,7 @@ export const CustomIndexDividerPDF: PDFDivider<
 		const characterSpacing = mm(customIndexSettings.letterSpacing);
 
 		const titleBox = bleed.box({
-			top: wordWrap ? 0 : T.top,
+			top: (wordWrap ? 0 : T.top) + customIndexSettings.titleMarginTop,
 			left: tabLeft + T.left,
 			width: tabWidth - T.left - T.right,
 			height: wordWrap ? O.tab.height : T.height,
@@ -173,6 +173,8 @@ export const CustomIndexDividerPDF: PDFDivider<
 		// baseline:"middle" only centers the first line).
 		let titleY = titleBox.y();
 		let baseline: "middle" | "top" = "middle";
+		// Omitted (not 0) in wrap mode — see below.
+		let titleHeight: number | undefined = titleBox.height();
 		if (wordWrap) {
 			const textHeight = await text.measureTextHeight({
 				text: title,
@@ -185,13 +187,21 @@ export const CustomIndexDividerPDF: PDFDivider<
 			});
 			titleY = titleBox.y() + Math.max(0, (titleBox.height() - textHeight) / 2);
 			baseline = "top";
+			// Leave `height` unset: PDFKit's own `heightOfString` (used above just to
+			// center the block) under-reports the space it then needs to actually
+			// *draw* the same text once `lineGap` goes negative (lineHeight < 1) —
+			// sizing the box to that measured height clips the last line(s). We
+			// already position the block ourselves (`titleY`/baseline:"top"), so no
+			// PDFKit-side height is needed, and omitting it also matches the CSS
+			// box's free overflow past the tab into the divider body.
+			titleHeight = undefined;
 		}
 
 		await text.draw(title, {
 			x: titleBox.x(),
 			y: titleY,
 			width: titleBox.width(),
-			height: titleBox.height(),
+			height: titleHeight,
 			fontSize: titleFontSize,
 			characterSpacing,
 			lineGap,

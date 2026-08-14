@@ -30,6 +30,19 @@ export type CustomIndex2Settings = {
 	 *  matters once text actually wraps to more than one line). 1 is tight/normal
 	 *  spacing; higher values (e.g. 1.3) add more room between wrapped lines. */
 	lineHeight: number;
+	/** Extra space (mm) added between the tab's left edge and the title text, on
+	 *  top of the built-in layout inset (which already grows to make room for the
+	 *  icon when one is shown). 0 is the default inset; negative values pull the
+	 *  text closer to the edge. */
+	titleMarginLeft: number;
+	/** Same as `titleMarginLeft`, but for the tab's right edge. */
+	titleMarginRight: number;
+	/** Extra space (mm) added above the title text, on screen and in the print
+	 *  PDF. When `wordWrap` is on, this shifts the whole vertically-centered
+	 *  block down (it doesn't shrink its centering space); when off, it shifts
+	 *  the auto-fit single line down. 0 is the default position; negative
+	 *  values pull the text up. */
+	titleMarginTop: number;
 };
 
 export const customIndex2Settings: CustomIndex2Settings = {
@@ -38,5 +51,8 @@ export const customIndex2Settings: CustomIndex2Settings = {
 	titleFontSize: 4,
 	wordWrap: true,
 	letterSpacing: 0.1,
-	lineHeight: 1,
+	lineHeight: 0.8,
+	titleMarginLeft: -0.2,
+	titleMarginRight: -0.2,
+	titleMarginTop: -0.2,
 };

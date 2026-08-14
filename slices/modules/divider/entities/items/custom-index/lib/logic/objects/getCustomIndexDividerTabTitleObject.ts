@@ -1,3 +1,4 @@
+import { customIndexSettings } from "../../../config";
 import type {
 	CustomIndexDividerLayoutObjects,
 	CustomIndexDividerTabSize,
@@ -19,18 +20,23 @@ export const getCustomIndexDividerTabTitleObject = (options: Options) => {
 
 	// Only reserve the icon-sized offset on full-width tabs when an icon is
 	// actually shown — otherwise the title would have unexplained blank space.
-	if (!isFullSize || !showIcon) {
-		return {
-			...base,
-			left: base.left + indentSize,
-			right: base.right + indentSize,
-		};
-	}
+	const titleObject =
+		!isFullSize || !showIcon
+			? {
+					...base,
+					left: base.left + indentSize,
+					right: base.right + indentSize,
+				}
+			: {
+					...base,
+					left: O.tabTitle.fullOffset.default + indentSize,
+					...O.tabTitle.full,
+				};
 
 	return {
-		...base,
-		left: O.tabTitle.fullOffset.default + indentSize,
-		...O.tabTitle.full,
+		...titleObject,
+		left: titleObject.left + customIndexSettings.titleMarginLeft,
+		right: titleObject.right + customIndexSettings.titleMarginRight,
 	};
 };
 

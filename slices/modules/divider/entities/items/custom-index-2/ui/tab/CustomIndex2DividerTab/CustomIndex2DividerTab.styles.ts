@@ -45,23 +45,49 @@ export const getIconWrapperSx: SxCallback = (options) => {
 		paddingLeft: options.mm(isRight ? glowInset : 0),
 		paddingRight: options.mm(isRight ? 0 : glowInset),
 		boxSizing: "border-box",
-		overflow: "visible",
+		// Clips the oversized (`imageSize`) image below back down to this visible
+		// slot — see `getIconImageSx`.
+		overflow: "hidden",
 		pointerEvents: "none",
 		WebkitMaskImage: maskImage,
 		maskImage,
 	};
 };
 
-/** Cover the slot and bias toward the tab's outer corner so square icons fill
- *  the tab height and slightly bleed past the top-right (or top-left on the
- *  alternate / right-edge tab). */
-export const getIconImageSx: SxCallback = (options) => ({
-	width: "100%",
-	height: "100%",
-	objectFit: "cover",
-	objectPosition: options.iconPosition === "right" ? "top right" : "top left",
-	display: "block",
-});
+/**
+ * Cover the slot and bias toward the tab's outer corner so square icons fill
+ * the tab height and slightly bleed past the top-right (or top-left on the
+ * alternate / right-edge tab).
+ *
+ * When `objects.icon.imageSize` is set (the horizontal bleed group), the
+ * image itself is drawn at that larger, symmetric size — grown by the same
+ * bleed amount on all 4 sides, so the artwork is honestly centered — flush
+ * with the wrapper's top/outer edge. The extra growth on the bottom/inner
+ * edges then gets clipped by the wrapper's `overflow: hidden`, leaving only
+ * the top/outer corner's overhang visible.
+ */
+export const getIconImageSx: SxCallback = (options) => {
+	const isRight = options.iconPosition === "right";
+	const drawBox = getCustomIndex2DividerIconDrawBox({
+		iconLeft: options.iconLeft,
+		iconWidth: options.objects.icon.width,
+		iconPosition: options.iconPosition,
+	});
+	const imageSize =
+		options.objects.icon.imageSize ?? options.objects.icon.width;
+	const left = isRight ? drawBox.width - imageSize : 0;
+
+	return {
+		position: "absolute",
+		top: options.mm(0),
+		left: options.mm(left),
+		width: options.mm(imageSize),
+		height: options.mm(imageSize),
+		objectFit: "cover",
+		objectPosition: isRight ? "top right" : "top left",
+		display: "block",
+	};
+};
 
 export const getTitleSx: SxCallback = (options) => {
 	const { mm, tabWidth, tabLeft, objects } = options;
@@ -69,7 +95,9 @@ export const getTitleSx: SxCallback = (options) => {
 	const width = tabWidth - T.left - T.right;
 	const left = tabLeft + T.left;
 	// When wrapping is on, fill the tab so 1- and 2-line titles can center vertically.
-	const top = customIndex2Settings.wordWrap ? 0 : T.top;
+	const top =
+		(customIndex2Settings.wordWrap ? 0 : T.top) +
+		customIndex2Settings.titleMarginTop;
 	const height = customIndex2Settings.wordWrap ? objects.tab.height : T.height;
 
 	return {

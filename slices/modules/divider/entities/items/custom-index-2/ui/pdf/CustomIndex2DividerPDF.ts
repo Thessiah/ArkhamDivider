@@ -124,6 +124,7 @@ export const CustomIndex2DividerPDF: PDFDivider<
 				iconWidth: O.icon.width,
 				iconPosition,
 			});
+			// Visible slot (mirrors the CSS wrapper's `overflow: hidden`).
 			const iconBox = bleed.box({
 				top: O.icon.top,
 				left: drawBox.left,
@@ -131,25 +132,45 @@ export const CustomIndex2DividerPDF: PDFDivider<
 				height: O.icon.height,
 			});
 
+			// When `imageSize` is set (horizontal bleed group), draw the image at
+			// that larger, symmetric size flush with the top/outer corner, then
+			// clip it down to `iconBox` — same idea as the CSS side's oversized
+			// image inside an `overflow: hidden` wrapper (see
+			// CustomIndex2DividerTab.styles.ts `getIconImageSx`).
+			const imageSize = O.icon.imageSize ?? O.icon.width;
+			const imageBox = bleed.box({
+				top: O.icon.top,
+				left:
+					iconPosition === "right"
+						? drawBox.left + drawBox.width - imageSize
+						: drawBox.left,
+				width: imageSize,
+				height: imageSize,
+			});
+
 			const response = await fetch(iconImage);
 			const arrayBuffer = await response.arrayBuffer();
 
-			// Cover + corner align matches the on-screen object-fit/object-position
-			// for custom-index-2 only (PDFImageService defaults stay contain/center).
+			ctx.doc.save();
+			ctx.doc
+				.rect(iconBox.x(), iconBox.y(), iconBox.width(), iconBox.height())
+				.clip();
+			// Cover fits the (now-symmetric) box; PDFImageService defaults to
+			// center/center align, which matches the CSS side once the box itself
+			// is the honest symmetric target.
 			image.drawImage(arrayBuffer, {
-				x: iconBox.x(),
-				y: iconBox.y(),
-				width: iconBox.width(),
-				height: iconBox.height(),
+				x: imageBox.x(),
+				y: imageBox.y(),
+				width: imageBox.width(),
+				height: imageBox.height(),
 				fit: "cover",
-				align: iconPosition === "right" ? "right" : "left",
-				valign: "top",
 				// Fade the edge facing the title (mirrors the CSS mask in the web UI).
 				fadeEdge: {
 					side: iconPosition === "right" ? "left" : "right",
 					width: mm(customIndex2IconTextEdgeFade),
 				},
 			});
+			ctx.doc.restore();
 		}
 	}
 
@@ -180,7 +201,7 @@ export const CustomIndex2DividerPDF: PDFDivider<
 		const characterSpacing = mm(customIndex2Settings.letterSpacing);
 
 		const titleBox = bleed.box({
-			top: wordWrap ? 0 : T.top,
+			top: (wordWrap ? 0 : T.top) + customIndex2Settings.titleMarginTop,
 			left: tabLeft + T.left,
 			width: tabWidth - T.left - T.right,
 			height: wordWrap ? O.tab.height : T.height,
@@ -193,6 +214,8 @@ export const CustomIndex2DividerPDF: PDFDivider<
 		// baseline:"middle" only centers the first line).
 		let titleY = titleBox.y();
 		let baseline: "middle" | "top" = "middle";
+		// Omitted (not 0) in wrap mode — see below.
+		let titleHeight: number | undefined = titleBox.height();
 		if (wordWrap) {
 			const textHeight = await text.measureTextHeight({
 				text: title,
@@ -205,13 +228,21 @@ export const CustomIndex2DividerPDF: PDFDivider<
 			});
 			titleY = titleBox.y() + Math.max(0, (titleBox.height() - textHeight) / 2);
 			baseline = "top";
+			// Leave `height` unset: PDFKit's own `heightOfString` (used above just to
+			// center the block) under-reports the space it then needs to actually
+			// *draw* the same text once `lineGap` goes negative (lineHeight < 1) —
+			// sizing the box to that measured height clips the last line(s). We
+			// already position the block ourselves (`titleY`/baseline:"top"), so no
+			// PDFKit-side height is needed, and omitting it also matches the CSS
+			// box's free overflow past the tab into the divider body.
+			titleHeight = undefined;
 		}
 
 		await text.draw(title, {
 			x: titleBox.x(),
 			y: titleY,
 			width: titleBox.width(),
-			height: titleBox.height(),
+			height: titleHeight,
 			fontSize: titleFontSize,
 			characterSpacing,
 			lineGap,
